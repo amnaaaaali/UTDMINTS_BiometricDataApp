@@ -10,7 +10,7 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from MultiFrequencies import getAmplitudes
+from SelectFrequency import getAmplitudes
 import scipy.signal as sps
 # import http.server as server
 import socketserver
@@ -62,6 +62,8 @@ globalCounter = 0
 # writer = Writer(fps=7, metadata=dict(artist='Me'), bitrate=-1)
 
 # define function to plot nodes
+
+
 def plotNodes(i):
     global data
     global globalMax
@@ -86,7 +88,7 @@ def plotNodes(i):
     f, ps = sps.welch(data, fs=26)
     print("ps", ps)
     print("f", f)
-    #get the amplitudes associated with the theta frequencies
+    # get the amplitudes associated with the theta frequencies
     extractAmplitude = getAmplitudes(ps, 1)
     temp = np.asarray(extractAmplitude)
 
@@ -97,8 +99,8 @@ def plotNodes(i):
     counter = counter + 1
     globalCounter = globalCounter + 1
     print("global counter updated to ", globalCounter)
-    
-    #update global max if current max is greater
+
+    # update global max if current max is greater
     if max > globalMax:
         print("old max", globalMax)
         globalMax = max
@@ -108,7 +110,7 @@ def plotNodes(i):
         counter = 0
 
     for i in range(len(temp)):
-        #normalize all amplitudes by the global max
+        # normalize all amplitudes by the global max
         temp[i] = temp[i] / globalMax
 
     # define vectors for plot colors and opacity

@@ -1,26 +1,16 @@
 # import necessary functions
 from pylsl import StreamInlet, resolve_stream
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from matplotlib.animation import FuncAnimation
 import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
+from SelectFrequency import getAmplitudes
 import scipy.signal as sps
 import socketserver
 import sys
-
-
-def getAmplitudes(ps, x):
-    # if delta freq wanted
-    if x == 0:
-        return ps[:, 3:9]
-    # if theta freq wanted
-    elif x == 1:
-        return ps[:, 10:19]
-    # if alpha freq wanted
-    elif x == 2:
-        return ps[:, 20:29]
 
 
 print("looking for an EEG stream...")
@@ -37,7 +27,8 @@ ax3 = fig.add_subplot(1, 3, 3)
 ax3.title.set_text("Alpha Frequencies")
 
 # set colormap
-cmap = plt.cm.jet
+# cmap = plt.cm.jet
+cmap = cm.get_cmap("jet")
 
 # define number of electrodes
 n = 64
@@ -52,7 +43,8 @@ x, y = EEGArray()
 newdata = np.zeros(n)
 
 # initialize scatter plot
-scat1 = ax1.scatter(x, y, s=100, c=newdata, vmin=0, vmax=1, cmap=plt.cm.jet_r)
+scat1 = ax1.scatter(x, y, s=100, c=newdata, vmin=0,
+                    vmax=1, cmap=cm.get_cmap("jet"))
 cbar = fig.colorbar(scat1, ax=[ax1, ax2, ax3], ticks=[0, 0.5, 1])
 cbar.ax.set_yticklabels(['0', '0.5', '1'])
 
@@ -77,8 +69,7 @@ globalMax = -(sys.maxsize)-1
 def plotNodes(i):
     global data
     global globalMax
-    global globalCounter
-    global counter
+
     start_time = time.time()
     inlet = StreamInlet(streams[0])
 
@@ -102,6 +93,7 @@ def plotNodes(i):
     extractAmplitudeDelta = getAmplitudes(ps, 0)
     extractAmplitudeTheta = getAmplitudes(ps, 1)
     extractAmplitudeAlpha = getAmplitudes(ps, 2)
+    # convert them to arrays
     tempDelta = np.asarray(extractAmplitudeDelta)
     tempTheta = np.asarray(extractAmplitudeTheta)
     tempAlpha = np.asarray(extractAmplitudeAlpha)
@@ -111,6 +103,7 @@ def plotNodes(i):
     tempTheta = np.mean(tempTheta, axis=1)
     tempAlpha = np.mean(tempAlpha, axis=1)
 
+    # max of each array by frequency
     maxDelta = np.amax(tempDelta)
     maxTheta = np.amax(tempTheta)
     maxAlpha = np.amax(tempAlpha)
@@ -145,10 +138,10 @@ def plotNodes(i):
     ax2.set_ylim(-6, 6)
     ax3.set_xlim(-6, 6)
     ax3.set_ylim(-6, 6)
-    # ax1.scatter(x, y, s = 100, c = altColors, cmap = plt.cm.jet_r)
-    ax1.scatter(x, y, s=100, c=colorsDelta, cmap=plt.cm.jet_r)
-    ax2.scatter(x, y, s=100, c=colorsTheta, cmap=plt.cm.jet_r)
-    ax3.scatter(x, y, s=100, c=colorsAlpha, cmap=plt.cm.jet_r)
+
+    ax1.scatter(x, y, s=100, c=colorsDelta, cmap=cm.get_cmap("jet"))
+    ax2.scatter(x, y, s=100, c=colorsTheta, cmap=cm.get_cmap("jet"))
+    ax3.scatter(x, y, s=100, c=colorsAlpha, cmap=cm.get_cmap("jet"))
 
     elapsed_time = time.time() - start_time
     # print(elapsed_time)

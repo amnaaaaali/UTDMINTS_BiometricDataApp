@@ -10,22 +10,11 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
+from SelectFrequency import getAmplitudes
 import scipy.signal as sps
 from scipy import stats
 # import http.server as server
 import socketserver
-
-
-def getAmplitudes(ps, x):
-    # if delta freq wanted
-    if x == 0:
-        return ps[:, 3:9]
-    # if theta freq wanted
-    elif x == 1:
-        return ps[:, 10:19]
-    # if alpha freq wanted
-    elif x == 2:
-        return ps[:, 20:29]
 
 
 # first resolve an EEG stream on the lab network

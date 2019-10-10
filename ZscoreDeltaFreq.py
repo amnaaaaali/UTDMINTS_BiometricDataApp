@@ -10,11 +10,12 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from MultiFrequencies import getAmplitudes
+from SelectFrequency import getAmplitudes
 import scipy.signal as sps
 from scipy import stats
 # import http.server as server
 import socketserver
+
 
 # first resolve an EEG stream on the lab network
 print("looking for an EEG stream...")

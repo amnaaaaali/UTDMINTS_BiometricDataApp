@@ -10,11 +10,11 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from MultiFrequencies import getAmplitudes
+from SelectFrequency import getAmplitudes
 import scipy.signal as sps
-# import http.server as server
 import socketserver
 import sys
+
 
 # first resolve an EEG stream on the lab network
 print("looking for an EEG stream...")
@@ -55,8 +55,6 @@ data = np.zeros((n, n))
 # a few global variables to maintain the maximum we have seen so far, as well as counters to see
 # how many times the counters are being updated
 globalMax = -(sys.maxsize)-1
-counter = 0
-globalCounter = 0
 # # Set up formatting for the movie files (uncomment this to record)
 # Writer = animation.writers['ffmpeg']
 # writer = Writer(fps=7, metadata=dict(artist='Me'), bitrate=-1)
@@ -67,8 +65,7 @@ globalCounter = 0
 def plotNodes(i):
     global data
     global globalMax
-    global globalCounter
-    global counter
+
     start_time = time.time()
     inlet = StreamInlet(streams[0])
 
@@ -98,18 +95,12 @@ def plotNodes(i):
     print("temp", temp)
     max = np.amax(temp)
 
-    counter = counter + 1
-    globalCounter = globalCounter + 1
-    print("global counter updated to ", globalCounter)
-
     # update global max if current max is greater
     if max > globalMax:
         print("old max", globalMax)
         globalMax = max
 
         print("new max", globalMax)
-        print("counter updated to ", counter)
-        counter = 0
 
     for i in range(len(temp)):
         # normalize all amplitudes by the global max
