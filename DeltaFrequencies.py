@@ -11,7 +11,7 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from GetCmapValues import getCmapByFreqBand
+from GetCmapValues import getCmapByFreqVal
 import scipy.signal as sps
 import socketserver
 import sys
@@ -74,7 +74,7 @@ def plotNodes(i):
     sample = inlet.pull_sample()
     newdata = np.asarray(sample[0][:n])
 
-    temp, globalMax, data = getCmapByFreqBand(data, newdata, 0, globalMax)
+    temp, globalMax, data = getCmapByFreqVal(data, newdata, 2.5, globalMax)
 
     colors = cmap(temp)
     ax1.set_xlim(-6, 6)
