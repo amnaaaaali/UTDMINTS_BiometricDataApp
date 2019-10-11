@@ -74,7 +74,7 @@ def plotNodes(i):
     sample = inlet.pull_sample()
     newdata = np.asarray(sample[0][:n])
 
-    temp, globalMax, data = getCmapByFreqVal(data, newdata, 2.5, globalMax)
+    temp, globalMax, data = getCmapByFreqVal(data, newdata, -1, globalMax)
 
     colors = cmap(temp)
     ax1.set_xlim(-6, 6)
