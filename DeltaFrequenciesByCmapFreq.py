@@ -5,16 +5,17 @@
 # import necessary functions
 from pylsl import StreamInlet, resolve_stream
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from matplotlib.animation import FuncAnimation
 import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from GetCmapValues import getCmapByFreqBand
+from GetCmapValues import getCmapByFreqVal
 import scipy.signal as sps
-# import http.server as server
 import socketserver
 import sys
+
 
 # first resolve an EEG stream on the lab network
 print("looking for an EEG stream...")
@@ -25,7 +26,7 @@ fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
 
 # set colormap
-cmap = plt.cm.jet
+cmap = cm.get_cmap("jet")
 
 # define number of electrodes
 n = 64
@@ -55,7 +56,6 @@ data = np.zeros((n, n))
 # a few global variables to maintain the maximum we have seen so far, as well as counters to see
 # how many times the counters are being updated
 globalMax = -(sys.maxsize)-1
-
 # # Set up formatting for the movie files (uncomment this to record)
 # Writer = animation.writers['ffmpeg']
 # writer = Writer(fps=7, metadata=dict(artist='Me'), bitrate=-1)
@@ -74,20 +74,28 @@ def plotNodes(i):
     sample = inlet.pull_sample()
     newdata = np.asarray(sample[0][:n])
 
-    temp, globalMax, data = getCmapByFreqBand(data, newdata, 2, globalMax)
-    colors = cmap(temp)
-    # colors.astype(float)
-    # colors[:, -1] = maxes / maxes.max()
-    # print(altColors)
-    # print(colors)
+    extractAmplitude = []
+    for i in range(3, 10):
+        print("len of fn", len(getCmapByFreqVal(data, newdata, i)))
+        extractAmplitude = np.append(
+            extractAmplitude, getCmapByFreqVal(data, newdata, i), axis=1)
 
+    temp = np.asarray(extractAmplitude)
+
+    # temp holds mean of each row in extractAmplitude
+    temp = np.mean(temp, axis=1)
+    localMax = max(np.amax(temp), globalMax)
+
+    for i in range(len(temp)):
+        # normalize all amplitudes by the global max
+        temp[i] = temp[i] / localMax
+
+    colors = cmap(temp)
     ax1.set_xlim(-6, 6)
     ax1.set_ylim(-6, 6)
     # ax1.scatter(x, y, s = 100, c = altColors, cmap = plt.cm.jet_r)
     ax1.scatter(x, y, s=100, c=colors, cmap=plt.cm.jet_r)
-
     elapsed_time = time.time() - start_time
-    # print(elapsed_time)
 
 
 # plot animation

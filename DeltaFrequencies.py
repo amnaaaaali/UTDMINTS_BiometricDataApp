@@ -5,12 +5,13 @@
 # import necessary functions
 from pylsl import StreamInlet, resolve_stream
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from matplotlib.animation import FuncAnimation
 import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from SelectFrequency import getAmplitudes
+from GetCmapValues import getCmapByFreqBand
 import scipy.signal as sps
 import socketserver
 import sys
@@ -25,7 +26,7 @@ fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
 
 # set colormap
-cmap = plt.cm.jet
+cmap = cm.get_cmap("jet")
 
 # define number of electrodes
 n = 64
@@ -72,55 +73,15 @@ def plotNodes(i):
     # get a new sample
     sample = inlet.pull_sample()
     newdata = np.asarray(sample[0][:n])
-    # print(newdata)
 
-    # delete first row of data
-    data = np.delete(data, 0, 0)
+    temp, globalMax, data = getCmapByFreqBand(data, newdata, 0, globalMax)
 
-    # add newdata as a row at the end of data. columns=electrodes rows=timestep
-    data = np.vstack([data, newdata])
-    data = np.transpose(data)
-
-    # compute power spectrum of data
-    f, ps = sps.welch(data, fs=26)
-    print("ps", ps)
-    print("f", f)
-    # get the amplitudes associated with the delta frequencies
-    extractAmplitude = getAmplitudes(ps, 0)
-    temp = np.asarray(extractAmplitude)
-
-    # temp holds mean of each row in extractAmplitude
-    temp = np.mean(temp, axis=1)
-
-    print("temp", temp)
-    max = np.amax(temp)
-
-    # update global max if current max is greater
-    if max > globalMax:
-        print("old max", globalMax)
-        globalMax = max
-
-        print("new max", globalMax)
-
-    for i in range(len(temp)):
-        # normalize all amplitudes by the global max
-        temp[i] = temp[i] / globalMax
-
-    # define vectors for plot colors and opacity
-    # altColors = freqs / 33
     colors = cmap(temp)
-    # colors.astype(float)
-    # colors[:, -1] = maxes / maxes.max()
-    # print(altColors)
-    # print(colors)
-
     ax1.set_xlim(-6, 6)
     ax1.set_ylim(-6, 6)
     # ax1.scatter(x, y, s = 100, c = altColors, cmap = plt.cm.jet_r)
     ax1.scatter(x, y, s=100, c=colors, cmap=plt.cm.jet_r)
-
     elapsed_time = time.time() - start_time
-    # print(elapsed_time)
 
 
 # plot animation

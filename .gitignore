@@ -1,0 +1,7 @@
+*mp4
+*pyc
+*json
+*xlsx
+*txt
+oldCodes/*
+.DS_Store
