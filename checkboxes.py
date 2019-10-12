@@ -42,7 +42,7 @@ RelativeZ.state(['!alternate'])
 
 
 def callback():
-   file_object = open("runScripts.sh", "w")
+   file_object = open("runScripts.sh", "w+")
    file_object.write("#!/bin/sh\n")
    file_object.write("python SendData2.py &\n")
    print (file_object)
@@ -64,9 +64,7 @@ def callback():
       print ("RelativePow")
    if (RelativeZ.state() == ('selected',)):
       print ("RelativeZ")
-   subprocess.call(['chmod', '754', './runScripts.sh'])
-   subprocess.call("./runScripts.sh", shell=True)
-   print ("done")
+   
 
 
 # print (file_object)
@@ -74,6 +72,8 @@ def callback():
 b = Button(top, text="RUN", command=callback, height=2, width=5)
 b.grid(row = 40, column = 5)
 
-
+subprocess.call(['chmod', '754', './runScripts.sh'])
+subprocess.call("./runScripts.sh", shell=True)
+print ("done")
 
 top.mainloop()
