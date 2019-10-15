@@ -10,7 +10,7 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from GetCmapValues import getCmapByFreqBand
+from GetCmapValues import getCmapByFreqVal
 import scipy.signal as sps
 # import http.server as server
 import socketserver
@@ -23,7 +23,7 @@ streams = resolve_stream('type', 'EEG')
 # create figure
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
-
+ax1.title.set_text("Alpha Frequencies")
 # set colormap
 cmap = plt.cm.jet
 
@@ -74,7 +74,7 @@ def plotNodes(i):
     sample = inlet.pull_sample()
     newdata = np.asarray(sample[0][:n])
 
-    temp, globalMax, data = getCmapByFreqBand(data, newdata, 2, globalMax)
+    temp, globalMax, data = getCmapByFreqVal(data, newdata, -3, globalMax)
     colors = cmap(temp)
     # colors.astype(float)
     # colors[:, -1] = maxes / maxes.max()
