@@ -1,4 +1,4 @@
-def getAmplitudes(ps, x):
+def getAmplitudesByFrequencyBand(ps, x):
     # if delta freq wanted
     if x == 0:
         return ps[:, 3:9]
@@ -8,3 +8,7 @@ def getAmplitudes(ps, x):
     # if alpha freq wanted
     elif x == 2:
         return ps[:, 20:29]
+
+
+def getAmplitudeByFreqIndex(ps, x):
+    return ps[: x]

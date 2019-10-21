@@ -7,7 +7,7 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from SelectFrequency import getAmplitudes
+from SelectFrequency import getAmplitudesByFrequencyBand
 import scipy.signal as sps
 import socketserver
 import sys
@@ -90,9 +90,9 @@ def plotNodes(i):
     print("f", f)
 
     # get the amplitudes associated with the various bands of frequencies
-    extractAmplitudeDelta = getAmplitudes(ps, 0)
-    extractAmplitudeTheta = getAmplitudes(ps, 1)
-    extractAmplitudeAlpha = getAmplitudes(ps, 2)
+    extractAmplitudeDelta = getAmplitudesByFrequencyBand(ps, 0)
+    extractAmplitudeTheta = getAmplitudesByFrequencyBand(ps, 1)
+    extractAmplitudeAlpha = getAmplitudesByFrequencyBand(ps, 2)
     # convert them to arrays
     tempDelta = np.asarray(extractAmplitudeDelta)
     tempTheta = np.asarray(extractAmplitudeTheta)

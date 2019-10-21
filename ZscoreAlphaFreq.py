@@ -10,22 +10,11 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
+from GetCmapValues import getCmapForZscores
 import scipy.signal as sps
 from scipy import stats
 # import http.server as server
 import socketserver
-
-
-def getAmplitudes(ps, x):
-    # if delta freq wanted
-    if x == 0:
-        return ps[:, 3:9]
-    # if theta freq wanted
-    elif x == 1:
-        return ps[:, 10:19]
-    # if alpha freq wanted
-    elif x == 2:
-        return ps[:, 20:29]
 
 
 # first resolve an EEG stream on the lab network
@@ -35,7 +24,7 @@ streams = resolve_stream('type', 'EEG')
 # create figure
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
-
+ax1.title.set_text("Alpha Frequencies By Z-scores")
 # set colormap
 cmap = plt.cm.seismic
 
@@ -83,35 +72,7 @@ def plotNodes(i):
     newdata = np.asarray(sample[0][:n])
     # print(newdata)
 
-    # delete first row of data
-    data = np.delete(data, 0, 0)
-
-    # add newdata as a row at the end of data. columns=electrodes rows=timestep
-    data = np.vstack([data, newdata])
-    data = np.transpose(data)
-
-    # compute power spectrum of data
-    f, ps = sps.welch(data, fs=26)
-    print("ps", ps)
-    print(len(f))
-    extractAmplitude = getAmplitudes(ps, 2)
-    print("extractAmp:\n", extractAmplitude, "\n")
-    temp = np.asarray(extractAmplitude)
-
-    # temp holds mean of each row in extractAmplitude
-    temp = np.mean(temp, axis=1)
-    print("temp", temp)
-
-    # square all values to make them 0 <= x <= 1
-    temp = np.square(temp)
-    # calculate zscores for the array
-    zscoreArray = stats.zscore(temp)
-
-    # next line creates positive and negative zscores, so if the value was between 0 to 0.5, it is
-    # scaled to between -1 and 0, and if the value was between 0.5 and 1, it is scaled to between
-    # 0 and 1
-    zscoreArray = ((zscoreArray / np.amax(zscoreArray)) / 2) + 0.5
-    print("zscore", zscoreArray)
+    zscoreArray, data = getCmapForZscores(data, newdata, -3)
 
     # define vectors for plot colors and opacity
     # altColors = freqs / 33

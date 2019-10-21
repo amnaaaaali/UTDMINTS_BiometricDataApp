@@ -10,7 +10,7 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from SelectFrequency import getAmplitudes
+from GetCmapValues import getCmapByFreqVal
 import scipy.signal as sps
 # import http.server as server
 import socketserver
@@ -23,7 +23,7 @@ streams = resolve_stream('type', 'EEG')
 # create figure
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
-
+ax1.title.set_text("Alpha Frequencies")
 # set colormap
 cmap = plt.cm.jet
 
@@ -55,8 +55,6 @@ data = np.zeros((n, n))
 # a few global variables to maintain the maximum we have seen so far, as well as counters to see
 # how many times the counters are being updated
 globalMax = -(sys.maxsize)-1
-counter = 0
-globalCounter = 0
 
 # # Set up formatting for the movie files (uncomment this to record)
 # Writer = animation.writers['ffmpeg']
@@ -68,55 +66,15 @@ globalCounter = 0
 def plotNodes(i):
     global data
     global globalMax
-    global globalCounter
-    global counter
+
     start_time = time.time()
     inlet = StreamInlet(streams[0])
 
     # get a new sample
     sample = inlet.pull_sample()
     newdata = np.asarray(sample[0][:n])
-    # print(newdata)
 
-    # delete first row of data
-    data = np.delete(data, 0, 0)
-
-    # add newdata as a row at the end of data. columns=electrodes rows=timestep
-    data = np.vstack([data, newdata])
-    data = np.transpose(data)
-
-    # compute power spectrum of data
-    f, ps = sps.welch(data, fs=26)
-    print("ps", ps)
-    print("f", f)
-    # get the amplitudes associated with the alpha frequencies
-    extractAmplitude = extractAmplitude(ps, 2)
-
-    temp = np.asarray(extractAmplitude)
-
-    # temp holds mean of each row in extractAmplitude
-    temp = np.mean(temp, axis=1)
-    print("temp", temp)
-    max = np.amax(temp)
-    counter = counter + 1
-    globalCounter = globalCounter + 1
-    print("global counter updated to ", globalCounter)
-
-    # update global max if current max is greater
-    if max > globalMax:
-        print("old max", globalMax)
-        globalMax = max
-
-        print("new max", globalMax)
-        print("counter updated to ", counter)
-        counter = 0
-
-    for i in range(len(temp)):
-        # normalize all amplitudes by the global max
-        temp[i] = temp[i] / globalMax
-
-    # define vectors for plot colors and opacity
-    # altColors = freqs / 33
+    temp, globalMax, data = getCmapByFreqVal(data, newdata, -3, globalMax)
     colors = cmap(temp)
     # colors.astype(float)
     # colors[:, -1] = maxes / maxes.max()
