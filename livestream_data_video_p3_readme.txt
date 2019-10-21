@@ -18,7 +18,7 @@ Resources:
 - PyGobject API Reference: https://lazka.github.io/pgi-docs/index.html
 
 - packages: (windows ver)
-	mingw64/mingw-w64-x86_64-gstreamer 1.16.0-2
+	mingw-w64-x86_64-gstreamer 1.16.0-2
 	mingw-w64-x86_64-gst-libav 1.16.0-3
 	mingw-w64-x86_64-gst-plugins-bad 1.16.0-3
 	mingw-w64-x86_64-gst-plugins-base 1.16.0-3
