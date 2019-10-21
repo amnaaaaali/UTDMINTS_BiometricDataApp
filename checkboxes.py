@@ -42,16 +42,18 @@ RelativeZ.state(['!alternate'])
 
 
 def callback():
-   file_object = open("runScripts.sh", "w+")
-   file_object.write("#!/bin/sh\n")
+   file_object = open('./runScripts.sh', 'w')
+   file_object.write("#!/bin/bash\n")
    file_object.write("python SendData2.py &\n")
-   print (file_object)
+   # print (file_object)
    if (DeltaFreq.state() == ('selected',)):
       print ("DeltaFreq")
       file_object.write("python DeltaFrequencies.py &\n")
+
    if (ThetaFreq.state() == ('selected',)):
       print ("ThetaFreq")
       file_object.write("python Z_Scores_Visualization.py &\n")
+
    if (AlphaFreq.state() == ('selected',)):
       print ("AlphaFreq")
    if (DeltaZ.state() == ('selected',)):
@@ -64,7 +66,9 @@ def callback():
       print ("RelativePow")
    if (RelativeZ.state() == ('selected',)):
       print ("RelativeZ")
-   
+   rc = subprocess.call(['chmod', '754', './runScripts.sh'])
+   tc = subprocess.call("./runScripts.sh")
+   print("hello")
 
 
 # print (file_object)
@@ -72,8 +76,7 @@ def callback():
 b = Button(top, text="RUN", command=callback, height=2, width=5)
 b.grid(row = 40, column = 5)
 
-subprocess.call(['chmod', '754', './runScripts.sh'])
-subprocess.call("./runScripts.sh", shell=True)
+
 print ("done")
 
 top.mainloop()
