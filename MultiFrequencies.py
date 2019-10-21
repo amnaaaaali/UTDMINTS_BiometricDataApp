@@ -20,11 +20,17 @@ streams = resolve_stream('type', 'EEG')
 fig = plt.figure(figsize=(13, 4))
 # ax1 is delta freq, ax2 = theta freq, ax3 = alpha freq
 ax1 = fig.add_subplot(1, 3, 1)
-ax1.title.set_text("Delta Frequencies")
+ax1.set_xticks([])
+ax1.set_yticks([])
+ax1.title.set_text("Delta Band")
 ax2 = fig.add_subplot(1, 3, 2)
-ax2.title.set_text("Theta Frequencies")
+ax2.set_xticks([])
+ax2.set_yticks([])
+ax2.title.set_text("Theta Band")
 ax3 = fig.add_subplot(1, 3, 3)
-ax3.title.set_text("Alpha Frequencies")
+ax3.set_xticks([])
+ax3.set_yticks([])
+ax3.title.set_text("Alpha Band")
 
 # set colormap
 # cmap = plt.cm.jet

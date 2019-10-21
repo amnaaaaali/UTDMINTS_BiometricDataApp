@@ -10,7 +10,7 @@ import matplotlib.animation as animation
 import numpy as np
 import time
 from EEGArray import EEGArray
-from SelectFrequency import getAmplitudes
+from SelectFrequency import getAmplitudesByFrequencyBand
 import scipy.signal as sps
 from scipy import stats
 # import http.server as server
@@ -25,11 +25,17 @@ streams = resolve_stream('type', 'EEG')
 fig = plt.figure(figsize=(13, 4))
 # ax1 is delta freq, ax2 = theta freq, ax3 = alpha freq
 ax1 = fig.add_subplot(1, 3, 1)
-ax1.title.set_text("Delta Frequencies")
+ax1.title.set_text("Delta Band")
+ax1.set_xticks([])
+ax1.set_yticks([])
 ax2 = fig.add_subplot(1, 3, 2)
-ax2.title.set_text("Theta Frequencies")
+ax2.title.set_text("Theta Band")
+ax2.set_xticks([])
+ax2.set_yticks([])
 ax3 = fig.add_subplot(1, 3, 3)
-ax3.title.set_text("Alpha Frequencies")
+ax3.title.set_text("Alpha Band")
+ax3.set_xticks([])
+ax3.set_yticks([])
 # set colormap
 cmap = plt.cm.seismic
 
@@ -89,9 +95,9 @@ def plotNodes(i):
     print("ps", ps)
 
 # get the amplitudes associated with the various bands of frequencies
-    extractAmplitudeDelta = getAmplitudes(ps, 0)
-    extractAmplitudeTheta = getAmplitudes(ps, 1)
-    extractAmplitudeAlpha = getAmplitudes(ps, 2)
+    extractAmplitudeDelta = getAmplitudesByFrequencyBand(ps, 0)
+    extractAmplitudeTheta = getAmplitudesByFrequencyBand(ps, 1)
+    extractAmplitudeAlpha = getAmplitudesByFrequencyBand(ps, 2)
     tempDelta = np.asarray(extractAmplitudeDelta)
     tempTheta = np.asarray(extractAmplitudeTheta)
     tempAlpha = np.asarray(extractAmplitudeAlpha)

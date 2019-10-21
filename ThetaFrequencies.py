@@ -23,7 +23,9 @@ streams = resolve_stream('type', 'EEG')
 # create figure
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
-ax1.title.set_text("Theta Frequencies")
+ax1.set_xticks([])
+ax1.set_yticks([])
+ax1.title.set_text("Theta Band")
 # set colormap
 cmap = plt.cm.jet
 

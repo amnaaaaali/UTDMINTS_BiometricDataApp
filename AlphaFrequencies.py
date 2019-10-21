@@ -23,7 +23,12 @@ streams = resolve_stream('type', 'EEG')
 # create figure
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
-ax1.title.set_text("Alpha Frequencies")
+ax1.set_xticks([])
+ax1.set_yticks([])
+ax1.title.set_text("Alpha Band")
+# plt.tick_params(top='off', bottom='off', left='off',
+#                 right='off', labelleft='off', labelbottom='on')
+
 # set colormap
 cmap = plt.cm.jet
 
