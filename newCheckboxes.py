@@ -40,9 +40,12 @@ RelativeZ = ttk.Checkbutton(top, text="Relative Z score")
 RelativeZ.grid(column=6, row=2)
 RelativeZ.state(['!alternate'])
 
+DummyButton = ttk.Checkbutton(top, text="DummyButton")
+DummyButton.grid(column=8, row=2)
+DummyButton.state(['!alternate'])
 
 def callback():
-   file_object = open('runScripts.sh', 'w+')
+   file_object = open('runScripts.sh', 'r+')
    file_object.write("#!/bin/bash\n")
    file_object.write("python SendData3.py &\n")
    # print (file_object)
@@ -78,6 +81,8 @@ def callback():
       print ("RelativeZ")
       file_object.write("python RelativeZscore.py &\n")
 
+   if (DummyButton.state() == ('selected',)):
+      print ("DummyButton")
    subprocess.call(['chmod', '754', 'runScripts.sh'])
    subprocess.call("./runScripts.sh")
    file_object.close()
