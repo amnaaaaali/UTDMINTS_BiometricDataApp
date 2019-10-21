@@ -4,7 +4,7 @@
 
 # import necessary functions
 from pylsl import StreamInlet, resolve_stream
-import matplotlib.pyplot as plt, mpld3
+import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import matplotlib.animation as animation
 import numpy as np
@@ -22,7 +22,6 @@ streams = resolve_stream('type', 'EEG')
 
 # create figure
 fig = plt.figure()
-
 ax1 = fig.add_subplot(1, 1, 1)
 
 # set colormap

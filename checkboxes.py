@@ -44,7 +44,7 @@ RelativeZ.state(['!alternate'])
 def callback():
    file_object = open('runScripts.sh', 'r+')
    file_object.write("#!/bin/bash\n")
-   file_object.write("python SendData2.py &\n")
+   file_object.write("python SendData3.py &\n")
    # print (file_object)
    if (DeltaFreq.state() == ('selected',)):
       print ("DeltaFreq")
@@ -52,26 +52,37 @@ def callback():
 
    if (ThetaFreq.state() == ('selected',)):
       print ("ThetaFreq")
-      file_object.write("python Z_Scores_Visualization.py &\n")
+      file_object.write("python ThetaFrequencies.py &\n")
 
    if (AlphaFreq.state() == ('selected',)):
       print ("AlphaFreq")
+      file_object.write("python AlphaFrequencies.py &\n")
+
    if (DeltaZ.state() == ('selected',)):
       print ("DeltaZ")
+      file_object.write("python ZscoreDeltaFreq.py &\n")
+
    if (ThetaZ.state() == ('selected',)):
       print ("ThetaZ")
+      file_object.write("python ZscoreThetaFreq.py &\n")
+
    if (AlphaZ.state() == ('selected',)):
       print ("AlphaZ")
+      file_object.write("python ZscoreAlphaFreq.py &\n")
+
    if (RelativePow.state() == ('selected',)):
       print ("RelativePow")
+      file_object.write("python RelativePower.py &\n")
+
    if (RelativeZ.state() == ('selected',)):
       print ("RelativeZ")
-   rc = subprocess.call(['chmod', '754', 'runScripts.sh'])
-   tc = subprocess.call("./runScripts.sh")
+      file_object.write("python RelativeZscore.py &\n")
+
+   subprocess.call(['chmod', '754', 'runScripts.sh'])
+   subprocess.call("./runScripts.sh")
    print("hello")
+   file_object.close()
 
-
-# print (file_object)
 
 b = Button(top, text="RUN", command=callback, height=2, width=5)
 b.grid(row = 40, column = 5)

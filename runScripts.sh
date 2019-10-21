@@ -1,4 +1,6 @@
 #!/bin/bash
-python SendData2.py &
+python SendData3.py &
 python DeltaFrequencies.py &
-python Z_Scores_Visualization.py &
+python ThetaFrequencies.py &
+python RelativePower.py &
+python RelativeZscore.py &
