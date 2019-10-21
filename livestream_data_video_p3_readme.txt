@@ -20,12 +20,13 @@ Resources:
 
 - PyGobject API Reference: https://lazka.github.io/pgi-docs/index.html
 
-- packages: 
-	mingw-w64-x86_64-gst-libav
-	mingw-w64-x86_64-gst-plugins-bad
-	mingw-w64-x86_64-gst-plugins-base
-	mingw-w64-x86_64-gst-plugins-good
-	mingw-w64-x86_64-gst-plugins-ugly
-	mingw-w64-x86_64-gtk3
-	mingw-w64-x86_64-python3
-	mingw-w64-x86_64-python3-gobject
+- packages: (windows ver)
+	mingw-w64-x86_64-gst-libav 1.16.0-3
+	mingw-w64-x86_64-gst-plugins-bad 1.16.0-3
+	mingw-w64-x86_64-gst-plugins-base 1.16.0-3
+	mingw-w64-x86_64-gst-plugins-good 1.16.0-2
+	mingw-w64-x86_64-gst-plugins-ugly 1.16.0-2
+	mingw-w64-x86_64-gst-python 1.16.0-2
+	mingw-w64-x86_64-gtk3 3.24.10-3
+	mingw-w64-x86_64-python3 3.7.4-7
+	mingw-w64-x86_64-python3-gobject 3.32.2-1
