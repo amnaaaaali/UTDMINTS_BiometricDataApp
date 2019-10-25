@@ -33,7 +33,7 @@ KA_VIDEO_MSG = "{\"type\": \"live.video.unicast\", \"key\": \"some_other_GUID\",
 
 # Gstreamer pipeline definition used to decode and display the live video stream
 
-PIPELINE_DEF = "udpsrc name=src do-timestamp=true name=src blocksize=1316 closefd=false buffer-size=5600!" \
+PIPELINE_DEF = "udpsrc name=src do-timestamp=true name=src blocksize=1316 close-socket=false buffer-size=5600 !" \
                 "tsparse !" \
                 "tsdemux !" \
                 "queue !" \
