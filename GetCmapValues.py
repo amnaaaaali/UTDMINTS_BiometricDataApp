@@ -2,6 +2,7 @@ import numpy as np
 import math
 from SelectFrequency import getAmplitudesByFrequencyBand
 from SelectFrequency import getAmplitudeByFreqIndex
+from SelectFrequency import getInterval
 import scipy.signal as sps
 from scipy import stats
 
@@ -84,18 +85,7 @@ def getCmapForZscores(data, newdata, freqValue):
         extractAmplitude = getAmplitudesByFrequencyBand(ps, 2)
     # specific freq value wanted
     else:
-        interval = [freqValue - 0.5, freqValue + 0.5]
-        startIndex = -1
-        endIndex = -1
-        for i in range(len(f)):
-            if interval[0] <= f[i] <= interval[1]:
-                if startIndex == -1:
-                    startIndex = i
-                else:
-                    endIndex = i
-
-        print("start ", startIndex, f[startIndex],
-              "end ", endIndex, f[endIndex])
+        startIndex, endIndex = getInterval(f, freqValue)
         extractAmplitude = ps[:, startIndex:endIndex]
 
     temp = np.asarray(extractAmplitude)
