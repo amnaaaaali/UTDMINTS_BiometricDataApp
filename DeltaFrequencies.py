@@ -4,6 +4,7 @@
 
 # import necessary functions
 from pylsl import StreamInlet, resolve_stream
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.animation import FuncAnimation
@@ -20,9 +21,16 @@ import sys
 # first resolve an EEG stream on the lab network
 print("looking for an EEG stream...")
 streams = resolve_stream('type', 'EEG')
-
+# changes the backend used to set up the figure, to support the forced placement
+# of the figure on the screen
+matplotlib.use("TkAgg")
+# removes toolbar at the bottom of plot
+matplotlib.rcParams['toolbar'] = 'None'
 # create figure
 fig = plt.figure()
+# remove extra spacing around figure
+fig.set_tight_layout(True)
+fig.set_size_inches(4, 3.5)
 ax1 = fig.add_subplot(1, 1, 1)
 ax1.set_xticks([])
 ax1.set_yticks([])
@@ -92,4 +100,5 @@ ani = FuncAnimation(fig, plotNodes, interval=100)
 # ani.save('visual.mp4', fps=7)
 # # save animation (uncomment to record)
 # ani.save('EEG_visiualization_LSL.mp4', writer=writer)
+plt.get_current_fig_manager().window.wm_geometry("+0+0")
 plt.show()
