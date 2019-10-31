@@ -12,3 +12,22 @@ def getAmplitudesByFrequencyBand(ps, x):
 
 def getAmplitudeByFreqIndex(ps, x):
     return ps[: x]
+
+
+def getInterval(f, freqValue):
+    # gets the start and end indices of the ps array that
+    # are +/- 0.5 away from the given frequency value. This freq
+    # value is the one that the visualization will be generated for
+    interval = [freqValue - 0.5, freqValue + 0.5]
+    startIndex = -1
+    endIndex = -1
+    for i in range(len(f)):
+        if interval[0] <= f[i] <= interval[1]:
+            if startIndex == -1:
+                startIndex = i
+            else:
+                endIndex = i
+
+    print("start ", startIndex, f[startIndex],
+          "end ", endIndex, f[endIndex])
+    return [startIndex, endIndex]

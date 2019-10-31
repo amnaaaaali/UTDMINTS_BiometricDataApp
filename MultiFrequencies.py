@@ -9,6 +9,7 @@ import numpy as np
 import time
 from EEGArray import EEGArray
 from SelectFrequency import getAmplitudesByFrequencyBand
+from GetCmapValues import getCmapByFreqVal
 import scipy.signal as sps
 import socketserver
 import sys
@@ -91,53 +92,11 @@ def plotNodes(i):
     sample = inlet.pull_sample()
     newdata = np.asarray(sample[0][:n])
 
-    # delete first row of data
-    data = np.delete(data, 0, 0)
+    # have to update the data array only after all 3 plots are done
+    tempDelta, globalMax, _ = getCmapByFreqVal(data, newdata, -1, globalMax)
+    tempTheta, globalMax, _ = getCmapByFreqVal(data, newdata, -2, globalMax)
+    tempAlpha, globalMax, data = getCmapByFreqVal(data, newdata, -3, globalMax)
 
-    # add newdata as a row at the end of data. columns=electrodes rows=timestep
-    data = np.vstack([data, newdata])
-    data = np.transpose(data)
-
-    # compute power spectrum of data
-    f, ps = sps.welch(data, fs=26)
-    print("ps", ps)
-    print("f", f)
-
-    # get the amplitudes associated with the various bands of frequencies
-    extractAmplitudeDelta = getAmplitudesByFrequencyBand(ps, 0)
-    extractAmplitudeTheta = getAmplitudesByFrequencyBand(ps, 1)
-    extractAmplitudeAlpha = getAmplitudesByFrequencyBand(ps, 2)
-    # convert them to arrays
-    tempDelta = np.asarray(extractAmplitudeDelta)
-    tempTheta = np.asarray(extractAmplitudeTheta)
-    tempAlpha = np.asarray(extractAmplitudeAlpha)
-
-    # temp holds mean of each row in extractAmplitude
-    tempDelta = np.mean(tempDelta, axis=1)
-    tempTheta = np.mean(tempTheta, axis=1)
-    tempAlpha = np.mean(tempAlpha, axis=1)
-
-    # max of each array by frequency
-    maxDelta = np.amax(tempDelta)
-    maxTheta = np.amax(tempTheta)
-    maxAlpha = np.amax(tempAlpha)
-
-    # update global max if current max is greater
-    if maxDelta > globalMax:
-        globalMax = maxDelta
-    if maxTheta > globalMax:
-        globalMax = maxTheta
-    if maxAlpha > globalMax:
-        globalMax = maxAlpha
-
-    for i in range(len(tempDelta)):
-        # normalize all amplitudes by the global max
-        tempDelta[i] = tempDelta[i] / globalMax
-        tempTheta[i] = tempTheta[i] / globalMax
-        tempAlpha[i] = tempAlpha[i] / globalMax
-
-    # define vectors for plot colors and opacity
-    # altColors = freqs / 33
     colorsDelta = cmap(tempDelta)
     colorsTheta = cmap(tempTheta)
     colorsAlpha = cmap(tempAlpha)
