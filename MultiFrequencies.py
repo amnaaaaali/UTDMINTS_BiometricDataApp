@@ -1,5 +1,6 @@
 # import necessary functions
 from pylsl import StreamInlet, resolve_stream
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.animation import FuncAnimation
@@ -16,8 +17,15 @@ import sys
 print("looking for an EEG stream...")
 streams = resolve_stream('type', 'EEG')
 
+# changes the backend used to set up the figure, to support the forced placement
+# of the figure on the screen
+matplotlib.use("TkAgg")
+# removes toolbar at the bottom of plot
+matplotlib.rcParams['toolbar'] = 'None'
 # create figure. figsize sets the default size of the
 fig = plt.figure(figsize=(13, 4))
+# remove extra spacing around figure
+fig.set_tight_layout(True)
 # ax1 is delta freq, ax2 = theta freq, ax3 = alpha freq
 ax1 = fig.add_subplot(1, 3, 1)
 ax1.set_xticks([])
@@ -51,7 +59,7 @@ newdata = np.zeros(n)
 # initialize scatter plot
 scat1 = ax1.scatter(x, y, s=100, c=newdata, vmin=0,
                     vmax=1, cmap=cm.get_cmap("jet"))
-cbar = fig.colorbar(scat1, ax=[ax1, ax2, ax3], ticks=[0, 0.5, 1])
+cbar = fig.colorbar(scat1, ax=ax3, ticks=[0, 0.5, 1])
 cbar.ax.set_yticklabels(['0', '0.5', '1'])
 
 # for j, lab in enumerate(['$0$','$1$','$2$','$3$']):
@@ -160,4 +168,5 @@ ani = FuncAnimation(fig, plotNodes, interval=100)
 # # save animation (uncomment to record)
 # ani.save('EEG_visiualization_LSL.mp4', writer=writer)
 
+plt.get_current_fig_manager().window.wm_geometry("+0+0")
 plt.show()
