@@ -25,10 +25,16 @@ streams = resolve_stream('type', 'EEG')
 fig = plt.figure(figsize=(13, 4))
 # ax1 is delta freq, ax2 = theta freq, ax3 = alpha freq
 ax1 = fig.add_subplot(1, 3, 1)
+ax1.set_xticks([])
+ax1.set_yticks([])
 ax1.title.set_text("Delta Frequencies")
 ax2 = fig.add_subplot(1, 3, 2)
+ax2.set_xticks([])
+ax2.set_yticks([])
 ax2.title.set_text("Theta Frequencies")
 ax3 = fig.add_subplot(1, 3, 3)
+ax3.set_xticks([])
+ax3.set_yticks([])
 ax3.title.set_text("Alpha Frequencies")
 # set colormap
 cmap = plt.cm.seismic
@@ -54,7 +60,7 @@ cbar.ax.set_yticklabels(['-1', '0', '1'])
 # for j, lab in enumerate(['$0$','$1$','$2$','$3$']):
 #     cbar.ax.text(.5, (2 * j + 1) / 8.0, lab, ha='center', va='center')
 cbar.ax.get_yaxis().labelpad = 15
-cbar.ax.set_ylabel('Normalized Z-scores', rotation=90)
+cbar.ax.set_ylabel('Normalized Relative Z-scores', rotation=90)
 
 # initialize 64 by 64 data array
 data = np.zeros((n, n))
@@ -86,7 +92,7 @@ def plotNodes(i):
 
     # compute power spectrum of data
     f, ps = sps.welch(data, fs=26)
-    print("ps", ps)
+
 
 # get the amplitudes associated with the various bands of frequencies
     extractAmplitudeDelta = getAmplitudesByFrequencyBand(ps, 0)
@@ -120,13 +126,14 @@ def plotNodes(i):
     # next line creates positive and negative zscores, so if the value was between 0 to 0.5, it is
     # scaled to between -1 and 0, and if the value was between 0.5 and 1, it is scaled to between
     # 0 and 1
-    # zscoreArrayDelta = (
-    #     (zscoreArrayDelta / np.amax(zscoreArrayDelta)) / 2) + 0.5
-    # zscoreArrayTheta = (
-    #     (zscoreArrayTheta / np.amax(zscoreArrayTheta)) / 2) + 0.5
-    # zscoreArrayAlpha = (
-    #     (zscoreArrayAlpha / np.amax(zscoreArrayAlpha)) / 2) + 0.5
+    zscoreArrayDelta = (
+        (zscoreArrayDelta / np.amax(zscoreArrayDelta)) / 2) + 0.5
+    zscoreArrayTheta = (
+        (zscoreArrayTheta / np.amax(zscoreArrayTheta)) / 2) + 0.5
+    zscoreArrayAlpha = (
+        (zscoreArrayAlpha / np.amax(zscoreArrayAlpha)) / 2) + 0.5
 
+    print(zscoreArrayAlpha)
     # define vectors for plot colors and opacity
     # altColors = freqs / 33
     colorsDelta = cmap(zscoreArrayDelta)
