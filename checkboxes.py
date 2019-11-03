@@ -3,7 +3,7 @@ from tkinter import ttk
 from functools import partial
 import subprocess
 
-WINDOW_SIZE="800x400"
+WINDOW_SIZE = "800x400"
 
 top = Tk()
 top.title('UTD MINTS')
@@ -25,7 +25,7 @@ DeltaZ.grid(column=6, row=0)
 DeltaZ.state(['!alternate'])
 
 ThetaZ = ttk.Checkbutton(top, text="Theta Z score freq")
-ThetaZ.grid(column= 0, row=2)
+ThetaZ.grid(column=0, row=2)
 ThetaZ.state(['!alternate'])
 
 AlphaZ = ttk.Checkbutton(top, text="Alpha Z score freq")
@@ -42,49 +42,50 @@ RelativeZ.state(['!alternate'])
 
 
 def callback():
-   file_object = open('runScripts.sh', 'w+')
-   file_object.write("#!/bin/bash\n")
-   file_object.write("python SendData3.py &\n")
-   # print (file_object)
-   if (DeltaFreq.state() == ('selected',)):
-      print ("DeltaFreq")
-      file_object.write("python DeltaFrequencies.py &\n")
+    file_object = open('runScripts.bat', 'w+')
+    # file_object.write("#!/bin/bash\n")
+    file_object.write("python SendData3.py &\n")
+    # print (file_object)
+    if (DeltaFreq.state() == ('selected',)):
+        print("DeltaFreq")
+        file_object.write("python DeltaFrequencies.py &\n")
 
-   if (ThetaFreq.state() == ('selected',)):
-      print ("ThetaFreq")
-      file_object.write("python ThetaFrequencies.py &\n")
+    if (ThetaFreq.state() == ('selected',)):
+        print("ThetaFreq")
+        file_object.write("python ThetaFrequencies.py &\n")
 
-   if (AlphaFreq.state() == ('selected',)):
-      print ("AlphaFreq")
-      file_object.write("python AlphaFrequencies.py &\n")
+    if (AlphaFreq.state() == ('selected',)):
+        print("AlphaFreq")
+        file_object.write("python AlphaFrequencies.py &\n")
 
-   if (DeltaZ.state() == ('selected',)):
-      print ("DeltaZ")
-      file_object.write("python ZscoreDeltaFreq.py &\n")
+    if (DeltaZ.state() == ('selected',)):
+        print("DeltaZ")
+        file_object.write("python ZscoreDeltaFreq.py &\n")
 
-   if (ThetaZ.state() == ('selected',)):
-      print ("ThetaZ")
-      file_object.write("python ZscoreThetaFreq.py &\n")
+    if (ThetaZ.state() == ('selected',)):
+        print("ThetaZ")
+        file_object.write("python ZscoreThetaFreq.py &\n")
 
-   if (AlphaZ.state() == ('selected',)):
-      print ("AlphaZ")
-      file_object.write("python ZscoreAlphaFreq.py &\n")
+    if (AlphaZ.state() == ('selected',)):
+        print("AlphaZ")
+        file_object.write("python ZscoreAlphaFreq.py &\n")
 
-   if (RelativePow.state() == ('selected',)):
-      print ("RelativePow")
-      file_object.write("python RelativePower.py &\n")
+    if (RelativePow.state() == ('selected',)):
+        print("RelativePow")
+        file_object.write("python RelativePower.py &\n")
 
-   if (RelativeZ.state() == ('selected',)):
-      print ("RelativeZ")
-      file_object.write("python RelativeZscore.py &\n")
+    if (RelativeZ.state() == ('selected',)):
+        print("RelativeZ")
+        file_object.write("python RelativeZscore.py &\n")
 
-   subprocess.call(['chmod', '754', 'runScripts.sh'])
-   subprocess.call("./runScripts.sh")
-   file_object.close()
+    #subprocess.call(['chmod', '754', 'runScripts.sh'])
+
+    file_object.close()
+    subprocess.call("runScripts.bat")
 
 
 b = Button(top, text="RUN", command=callback, height=2, width=5)
-b.grid(row = 40, column = 5)
+b.grid(row=40, column=5)
 
 
 top.mainloop()
