@@ -42,8 +42,8 @@ RelativeZ.state(['!alternate'])
 
 
 def callback():
-    file_object = open('runScripts.bat', 'w+')
-    # file_object.write("#!/bin/bash\n")
+    file_object = open('runScripts.sh', 'w+')
+    file_object.write("#!/bin/bash\n")
     file_object.write("python SendData3.py &\n")
     # print (file_object)
     if (DeltaFreq.state() == ('selected',)):
@@ -81,7 +81,7 @@ def callback():
     #subprocess.call(['chmod', '754', 'runScripts.sh'])
 
     file_object.close()
-    subprocess.call("runScripts.bat")
+    subprocess.call("runScripts.sh",shell=true)
 
 
 b = Button(top, text="RUN", command=callback, height=2, width=5)
