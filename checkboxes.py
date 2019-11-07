@@ -81,7 +81,7 @@ def callback():
     #subprocess.call(['chmod', '754', 'runScripts.sh'])
 
     file_object.close()
-    subprocess.call("runScripts.sh",shell=true)
+    subprocess.call("runScripts.sh",shell=True)
 
 
 b = Button(top, text="RUN", command=callback, height=2, width=5)

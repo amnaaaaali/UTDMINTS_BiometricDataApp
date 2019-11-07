@@ -1,2 +1,4 @@
+#!/bin/bash
 python SendData3.py &
-python DeltaFrequencies.py &
+python ThetaFrequencies.py &
+python AlphaFrequencies.py &
