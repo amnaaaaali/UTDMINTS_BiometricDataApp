@@ -1,3 +1,4 @@
+import os
 from tkinter import *
 from tkinter import ttk
 from functools import partial
@@ -42,6 +43,8 @@ RelativeZ.state(['!alternate'])
 
 
 def callback():
+    if os.path.exists("runScripts.txt"):
+         os.remove("runScripts.txt")
     file_object = open('runScripts.sh', 'w+')
     file_object.write("#!/bin/bash\n")
     file_object.write("python SendData3.py &\n")
@@ -78,14 +81,12 @@ def callback():
         print("RelativeZ")
         file_object.write("python RelativeZscore.py &\n")
 
-    #subprocess.call(['chmod', '754', 'runScripts.sh'])
+    subprocess.call(['chmod', '754', 'runScripts.sh'])
 
     file_object.close()
-    subprocess.call("runScripts.sh",shell=True)
-
+    subprocess.call("./runScripts.sh",shell=True)
 
 b = Button(top, text="RUN", command=callback, height=2, width=5)
 b.grid(row=40, column=5)
-
 
 top.mainloop()
