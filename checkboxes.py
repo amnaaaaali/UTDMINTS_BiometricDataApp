@@ -90,3 +90,4 @@ b = Button(top, text="RUN", command=callback, height=2, width=5)
 b.grid(row=40, column=5)
 
 top.mainloop()
+sys.exit()
