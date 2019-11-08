@@ -41,48 +41,52 @@ RelativeZ = ttk.Checkbutton(top, text="Relative Z score")
 RelativeZ.grid(column=6, row=2)
 RelativeZ.state(['!alternate'])
 
+def checkIfSelected(state):
+    if(state == ('selected',) or state == ('focus', 'selected')):
+        return True
+    return False
 
 def callback():
     if os.path.exists("runScripts.txt"):
          os.remove("runScripts.txt")
     file_object = open('runScripts.sh', 'w+')
-    file_object.write("#!/bin/bash\n")
+    file_object.write("#/bin/bash\n")
     file_object.write("python SendData3.py &\n")
     # print (file_object)
-    if (DeltaFreq.state() == ('selected',)):
+    if (checkIfSelected(DeltaFreq.state())):
         print("DeltaFreq")
         file_object.write("python DeltaFrequencies.py &\n")
 
-    if (ThetaFreq.state() == ('selected',)):
+    if (checkIfSelected(ThetaFreq.state())):
         print("ThetaFreq")
         file_object.write("python ThetaFrequencies.py &\n")
 
-    if (AlphaFreq.state() == ('selected',)):
+    if (checkIfSelected(AlphaFreq.state())):
         print("AlphaFreq")
         file_object.write("python AlphaFrequencies.py &\n")
 
-    if (DeltaZ.state() == ('selected',)):
+    if (checkIfSelected(DeltaZ.state())):
         print("DeltaZ")
         file_object.write("python ZscoreDeltaFreq.py &\n")
 
-    if (ThetaZ.state() == ('selected',)):
+    if (checkIfSelected(ThetaZ.state())):
         print("ThetaZ")
         file_object.write("python ZscoreThetaFreq.py &\n")
 
-    if (AlphaZ.state() == ('selected',)):
+    if (checkIfSelected(AlphaZ.state())):
         print("AlphaZ")
         file_object.write("python ZscoreAlphaFreq.py &\n")
 
-    if (RelativePow.state() == ('selected',)):
+    if (checkIfSelected(RelativePow.state())):
         print("RelativePow")
         file_object.write("python RelativePower.py &\n")
 
-    if (RelativeZ.state() == ('selected',)):
+    if (checkIfSelected(RelativeZ.state())):
         print("RelativeZ")
         file_object.write("python RelativeZscore.py &\n")
 
     subprocess.call(['chmod', '754', 'runScripts.sh'])
-
+    #
     file_object.close()
     subprocess.call("./runScripts.sh",shell=True)
 
