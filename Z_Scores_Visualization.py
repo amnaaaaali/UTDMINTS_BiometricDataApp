@@ -4,7 +4,6 @@ from scipy import stats
 from pylsl import StreamInlet, resolve_stream
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-import time
 from EEGArray import EEGArray
 
 # Write code to visualize amplitudes of the EEG electrodes in terms of their z-score.
@@ -23,6 +22,7 @@ streams = resolve_stream('type', 'EEG')
 
 # create figure
 fig = plt.figure()
+# create a plot on the figure
 ax1 = fig.add_subplot(1, 1, 1)
 
 # define number of electrodes
@@ -35,11 +35,13 @@ data = np.zeros(n)
 
 # initialize scatter plot
 scat1 = ax1.scatter(x, y, c=data, s=100, cmap=plt.cm.RdYlGn, vmin=-7, vmax=7)
+# create a color bar for the scatter plot
 cbar = fig.colorbar(scat1, ax=ax1)
 
 
 # define function to plot nodes
 def plotNodes(i):
+    # define global variable for data
     global data
 
     # Create an inlet
@@ -54,22 +56,20 @@ def plotNodes(i):
     # Compute the z-score of each amplitude
     z_scores = stats.zscore(data)
 
-    # pos_data = data > 0
-    # neg_data = pos_data + (-1) * np.ones(len(pos_data))
-    # print(PosData+NegData)
-    # print(data)
-    # print("pos neg data...")
-    # print(np.log(abs(data)) * (pos_data + neg_data))
-
+    # set the x-axis limits
     ax1.set_xlim(-6, 6)
+    # set the y-axis limits
     ax1.set_ylim(-6, 6)
-    # Plots amplitudes
-    # ax1.scatter(x, y, c = data, s = 100, cmap = plt.cm.RdBu_r, vmin=-10000,vmax=10000)
-    ax1.scatter(x, y, c=z_scores, s=100, cmap=plt.cm.RdYlGn, vmin=-7, vmax=7)
-    cbar.ax.set_ylabel('Z-Scores', rotation=90)
 
+    # plot the amplitudes
+    ax1.scatter(x, y, c=z_scores, s=100, cmap=plt.cm.RdYlGn, vmin=-7, vmax=7)
+    # set the label of the color bar to "Z-Scores"
+    cbar.ax.set_ylabel('Z-Scores', rotation=90)
+    # print the z-scores
     print(z_scores)
 
 
+# create a function animation
 ani = FuncAnimation(fig, plotNodes, interval=100)
+# show the plot
 plt.show()
