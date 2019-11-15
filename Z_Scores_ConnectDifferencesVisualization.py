@@ -22,6 +22,7 @@ streams = resolve_stream('type', 'EEG')
 
 # create figure
 fig = plt.figure()
+# create a subplot
 ax1 = fig.add_subplot(1, 1, 1)
 
 # define number of electrodes
@@ -36,12 +37,13 @@ data = np.zeros(n)
 # initialize scatter plot
 scat1 = ax1.scatter(x, y)
 
+
 # define function to plot nodes
 def plotNodes(i):
+    # define all global variables
     global data
 
     # Create an inlet
-    # start_time = time.time()
     inlet = StreamInlet(streams[0])
     # Pull data into the inlet
     amplitudes = inlet.pull_sample()
@@ -52,7 +54,9 @@ def plotNodes(i):
     data = np.asarray(amplitudes[0][:n])
 
     # Initialize row and column dimensions for the 64 x 64 list
+    # initialize row dimension to 64
     i = 64
+    # initialize column dimension to 64
     j = 64
 
     # Create and initialize a 2-dimensional list with zeros to store differences between amplitudes
@@ -75,11 +79,16 @@ def plotNodes(i):
     # print("\nZ-Scores Calculation: \n")
     z_scores = np.zeros([64, 64])
 
+    # calculate the z-scores for each row and column in the differences_data array
     for i in range(63):
+        # calculate the z-scores
         z_scores[:n][i] = stats.zscore(differences_data[:n][i])
+        # print the z-scores
         print(z_scores[:n][i])
 
+    # set the x-axis limits for plot ax1
     ax1.set_xlim(-6, 6)
+    # set the y-axis limits for plot ax1
     ax1.set_ylim(-6, 6)
     # Plot z-scores of differences in amplitudes
     ax1.scatter(x, y)
@@ -88,17 +97,25 @@ def plotNodes(i):
     # Plot a blue line between electrodes where z-score < -2.3
     # Dimensions of z-scores numpy array is not acceptable in scatter function
 
+    # for every pair of electrodes:
+    #     - plot a red line where the z-scores of the differences is > 2.3
+    #     - plot a blue line where the z-scores of the differences is < -2.3
     for i in range(64):
         for j in range(64):
             if j <= i:
                 continue
+            # if z-scores is > 2.3, plot a red line on ax1
             if z_scores[i, j] > 2.3:
                 Red_Lines(list[i], list[j], ax1)
+            # if z-scores is < -2.3, plot a blue line on ax1
             elif z_scores[i, j] < -2.3:
                 Blue_Lines(list[i], list[j], ax1)
+            # else, continue
             else:
                 continue
 
 
+# create a function animation
 ani = FuncAnimation(fig, plotNodes, interval=100)
+# show the plot
 plt.show()
