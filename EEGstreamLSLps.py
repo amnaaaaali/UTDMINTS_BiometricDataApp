@@ -7,6 +7,7 @@ from pylsl import StreamInlet, resolve_stream
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import matplotlib.animation as animation
+
 import numpy as np
 import time
 from EEGArray import EEGArray
@@ -20,7 +21,8 @@ streams = resolve_stream('type', 'EEG')
 
 # create figure
 fig = plt.figure()
-ax1 = fig.add_subplot(1, 1, 1)
+ax1 = fig.add_subplot(1,1,1)
+
 
 # set colormap
 cmap = plt.cm.jet
@@ -38,14 +40,16 @@ x, y = EEGArray()
 newdata = np.zeros(n)
 
 # initialize scatter plot
-scat1 = ax1.scatter(x, y, s=100, c=newdata, vmin=0, vmax=1, cmap=plt.cm.jet_r)
+scat1 = ax1.scatter(x, y, s = 100, c = newdata, vmin = 0, vmax = 1, cmap = plt.cm.jet_r)
 cbar = fig.colorbar(scat1, ax=ax1, ticks=[0, 0.5, 1])
-cbar.ax.set_yticklabels(['0', '0.5', '1'])
+cbar.ax.set_yticklabels(['0 Hz', '6.5 Hz', '13 Hz'])
 
 # for j, lab in enumerate(['$0$','$1$','$2$','$3$']):
 #     cbar.ax.text(.5, (2 * j + 1) / 8.0, lab, ha='center', va='center')
 cbar.ax.get_yaxis().labelpad = 15
-cbar.ax.set_ylabel('Normalized Amplitude', rotation=90)
+
+cbar.ax.set_ylabel('Frequency (Hz)', rotation=90)
+
 
 # initialize 64 by 64 data array
 data = np.zeros((n, n))
@@ -77,48 +81,44 @@ def plotNodes(i):
 
     # compute power spectrum of data
     f, ps = sps.welch(data, fs=26)
-    print("ps", ps)
-    print(len(f))
-    extractFreq = f[3:9]
-    print("extractFreq:\n", extractFreq, "\n")
-    extractAmplitude = ps[:, 3:9]
-    print("extractAmp:\n", extractAmplitude, "\n")
-    temp = np.asarray(extractAmplitude)
+    
+    print(f)
+
     # get elements with maximum power in each row. note: col=freq rows=electrodes
     maxes = []
+    freqs = []
 
     for i in range(n):
+        freqs.append(np.argmax(ps[i, :]))
         maxes.append((np.amax(ps[i, :])))
 
-    # temp holds mean of each row in extractAmplitude
-    temp = np.mean(temp, axis=1)
-    # # convert lists to arrays
+    # convert lists to arrays
     maxes = np.asarray(maxes)
-    print("temp", temp)
-    max = np.amax(temp)
-    for i in range(len(temp)):
-        temp[i] = temp[i] / 5000
+    freqs = np.asarray(freqs)
+    # print(freqs)
 
     # define vectors for plot colors and opacity
-    # altColors = freqs / 33
-    colors = cmap(temp)
+    altColors = freqs/33.0
+    colors = cmap(freqs / 33.0)
     # colors.astype(float)
-    # colors[:, -1] = maxes / maxes.max()
+    colors[:,-1] = maxes / maxes.max()
     # print(altColors)
     # print(colors)
 
-    ax1.set_xlim(-6, 6)
-    ax1.set_ylim(-6, 6)
+    ax1.set_xlim(-6,6)
+    ax1.set_ylim(-6,6)
     # ax1.scatter(x, y, s = 100, c = altColors, cmap = plt.cm.jet_r)
-    ax1.scatter(x, y, s=100, c=colors, cmap=plt.cm.jet_r)
+    ax1.scatter(x, y, s = 100, c = colors, cmap = plt.cm.jet_r)
 
     elapsed_time = time.time() - start_time
-    # print(elapsed_time)
+    print(elapsed_time)
 
 
 # plot animation
-ani = FuncAnimation(fig, plotNodes, interval=100)
-#ani.save('visual.mp4', fps=7)
+
+
+ani = FuncAnimation(fig, plotNodes, interval =100)
+# ani.save('visual.mp4', fps=7)
 # # save animation (uncomment to record)
 # ani.save('EEG_visiualization_LSL.mp4', writer=writer)
 
