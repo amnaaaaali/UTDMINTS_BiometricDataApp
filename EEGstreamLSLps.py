@@ -7,10 +7,13 @@ from pylsl import StreamInlet, resolve_stream
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import matplotlib.animation as animation
-import time
+
 import numpy as np
+import time
 from EEGArray import EEGArray
 import scipy.signal as sps
+# import http.server as server
+import socketserver
 
 # first resolve an EEG stream on the lab network
 print("looking for an EEG stream...")
@@ -19,6 +22,7 @@ streams = resolve_stream('type', 'EEG')
 # create figure
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
+
 
 # set colormap
 cmap = plt.cm.jet
@@ -43,7 +47,9 @@ cbar.ax.set_yticklabels(['0 Hz', '6.5 Hz', '13 Hz'])
 # for j, lab in enumerate(['$0$','$1$','$2$','$3$']):
 #     cbar.ax.text(.5, (2 * j + 1) / 8.0, lab, ha='center', va='center')
 cbar.ax.get_yaxis().labelpad = 15
+
 cbar.ax.set_ylabel('Frequency (Hz)', rotation=90)
+
 
 # initialize 64 by 64 data array
 data = np.zeros((n, n))
@@ -75,6 +81,7 @@ def plotNodes(i):
 
     # compute power spectrum of data
     f, ps = sps.welch(data, fs=26)
+    
     print(f)
 
     # get elements with maximum power in each row. note: col=freq rows=electrodes

@@ -31,7 +31,6 @@ data = np.zeros(n)
 scat1 = ax1.scatter(x, y, c=data, s=100, cmap=plt.cm.RdYlGn, vmin=-15, vmax=15)
 fig.colorbar(scat1, ax=ax1)
 
-
 # define function to plot nodes
 def plotNodes(i):
     global data
@@ -56,7 +55,6 @@ def plotNodes(i):
 
     elapsed_time = time.time() - start_time
     print(elapsed_time)
-
 
 ani = FuncAnimation(fig, plotNodes, interval=100)
 plt.show()
