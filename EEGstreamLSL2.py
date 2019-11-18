@@ -9,10 +9,7 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 import time
 from EEGArray import EEGArray
-<<<<<<< HEAD
-=======
 import scipy.signal as sps
->>>>>>> temp
 
 # first resolve an EEG stream on the lab network
 print("looking for an EEG stream...")
@@ -32,11 +29,7 @@ x, y = EEGArray()
 data = np.zeros(n)
 
 # initialize scatter plot
-<<<<<<< HEAD
 scat1 = ax1.scatter(x, y, c=data, s=100, cmap=plt.cm.RdYlGn, vmin=-15, vmax=15)
-=======
-scat1 = ax1.scatter(x, y, c = data, s = 100, cmap = plt.cm.RdYlGn, vmin=-15,vmax=15)
->>>>>>> temp
 fig.colorbar(scat1, ax=ax1)
 
 # define function to plot nodes
@@ -55,7 +48,6 @@ def plotNodes(i):
     # print(data)
     print(np.log(abs(data))*(PosData+NegData))
 
-<<<<<<< HEAD
     ax1.set_xlim(-6, 6)
     ax1.set_ylim(-6, 6)
     # Plots amplitudes
@@ -65,14 +57,5 @@ def plotNodes(i):
     elapsed_time = time.time() - start_time
     print(elapsed_time)
 
-=======
-    ax1.set_xlim(-6,6)
-    ax1.set_ylim(-6,6)
-    # ax1.scatter(x, y, c = data, s = 100, cmap = plt.cm.RdBu_r, vmin=-10000,vmax=10000)
-    ax1.scatter(x, y, c = data, s = 100, cmap = plt.cm.RdYlGn, vmin=-15,vmax=15)
-
-    elapsed_time = time.time() - start_time
-    print(elapsed_time)
->>>>>>> temp
 ani = FuncAnimation(fig, plotNodes, interval=100)
 plt.show()
