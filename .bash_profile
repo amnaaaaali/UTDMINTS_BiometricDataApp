@@ -1,0 +1,1 @@
+alias pythonMsys='C:/msys64/mingw64/bin/python.exe'

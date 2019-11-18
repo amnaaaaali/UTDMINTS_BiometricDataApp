@@ -107,9 +107,16 @@ def EEGArray():
     TP10 = (u4[0], -Para1(u4[0]))
 
     # define a list object for node sites
+<<<<<<< HEAD
     list = [FP1, FP2, F3, F4, C3, C4, P3, P4, O1, O2, F7, F8, T7, T8, P7, P8, FZ, CZ, PZ, OZ,FC1, FC2, CP1, CP2,
             FC5, FC6, CP5, CP6, FT9, FT10, FCZ, AFZ, F1, F2, C1, C2, P1, P2, AF3, AF4, FC3, FC4, CP3, CP4, PO3,
             PO4, F5, F6, C5, C6, P5, P6, AF7, AF8, FT7, FT8, TP7, TP8, PO7, PO8, FPZ, CPZ, POZ, TP10]
+=======
+    list = [
+    FP1,FP2,F3,F4,C3,C4,P3,P4,O1,O2,F7,F8,T7,T8,P7,P8,FZ,CZ,PZ,OZ,FC1,FC2,CP1,CP2,
+    FC5,FC6,CP5,CP6,FT9,FT10,FCZ,AFZ,F1,F2,C1,C2,P1,P2,AF3,AF4,FC3,FC4,CP3,CP4,PO3,
+    PO4,F5,F6,C5,C6,P5,P6,AF7,AF8,FT7,FT8,TP7,TP8,PO7,PO8,FPZ,CPZ,POZ,TP10]
+>>>>>>> temp
 
     # store node coordinates in lists then convert to numpy array
     x = []
@@ -120,5 +127,14 @@ def EEGArray():
 
     x = np.asarray(x)
     y = np.asarray(y)
+<<<<<<< HEAD
     
     return x, y, list
+=======
+
+    return x, y
+
+# # plot node sites
+# plt.scatter(x,y, s=100)
+# plt.show()
+>>>>>>> temp
