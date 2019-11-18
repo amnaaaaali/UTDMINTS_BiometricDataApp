@@ -1,3 +1,5 @@
+
+
 '''
     Example for how to receive live data and display live video (without gaze overlay) from glasses.
     gstreamer 0.10 required in order to display live video.

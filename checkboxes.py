@@ -9,37 +9,19 @@ WINDOW_SIZE = "800x400"
 top = Tk()
 top.title('UTD MINTS')
 
-DeltaFreq = ttk.Checkbutton(top, text="Delta Freq")
-DeltaFreq.grid(column=0, row=0)
-DeltaFreq.state(['!alternate'])
+MultiFreq = ttk.Checkbutton(top, text="Multi Frequencies")
+MultiFreq.grid(column=0, row=0)
+MultiFreq.state(['!alternate'])
 
-ThetaFreq = ttk.Checkbutton(top, text="Theta freq")
-ThetaFreq.grid(column=2, row=0)
-ThetaFreq.state(['!alternate'])
 
-AlphaFreq = ttk.Checkbutton(top, text="Alpha Freq")
-AlphaFreq.grid(column=4, row=0)
-AlphaFreq.state(['!alternate'])
+ZscoreFreq = ttk.Checkbutton(top, text="Z-scores By Frequency")
+ZscoreFreq.grid(column=4, row=0)
+ZscoreFreq.state(['!alternate'])
 
-DeltaZ = ttk.Checkbutton(top, text="Delta Z score Freq")
-DeltaZ.grid(column=6, row=0)
-DeltaZ.state(['!alternate'])
+video = ttk.Checkbutton(top, text="Gaze Video Livestream")
+video.grid(column=8, row=0)
+video.state(['!alternate'])
 
-ThetaZ = ttk.Checkbutton(top, text="Theta Z score freq")
-ThetaZ.grid(column=0, row=2)
-ThetaZ.state(['!alternate'])
-
-AlphaZ = ttk.Checkbutton(top, text="Alpha Z score freq")
-AlphaZ.grid(column=2, row=2)
-AlphaZ.state(['!alternate'])
-
-RelativePow = ttk.Checkbutton(top, text="Relative Power")
-RelativePow.grid(column=4, row=2)
-RelativePow.state(['!alternate'])
-
-RelativeZ = ttk.Checkbutton(top, text="Relative Z score")
-RelativeZ.grid(column=6, row=2)
-RelativeZ.state(['!alternate'])
 
 def checkIfSelected(state):
     if(state == ('selected',) or state == ('focus', 'selected')):
@@ -47,48 +29,28 @@ def checkIfSelected(state):
     return False
 
 def callback():
-    if os.path.exists("runScripts.txt"):
-         os.remove("runScripts.txt")
+    if os.path.exists("runScripts.sh"):
+         os.remove("runScripts.sh")
     file_object = open('runScripts.sh', 'w+')
     file_object.write("#/bin/bash\n")
     file_object.write("python SendData3.py &\n")
     # print (file_object)
-    if (checkIfSelected(DeltaFreq.state())):
-        print("DeltaFreq")
-        file_object.write("python DeltaFrequencies.py &\n")
+    if (checkIfSelected(MultiFreq.state())):
+        print("MultiFreq")
+        file_object.write("python MultiFrequencies.py &\n")
 
-    if (checkIfSelected(ThetaFreq.state())):
-        print("ThetaFreq")
-        file_object.write("python ThetaFrequencies.py &\n")
+    if (checkIfSelected(ZscoreFreq.state())):
+        print("ZscoreFreq")
+        file_object.write("python Z_Scores_ByFreq.py &\n")
 
-    if (checkIfSelected(AlphaFreq.state())):
-        print("AlphaFreq")
-        file_object.write("python AlphaFrequencies.py &\n")
-
-    if (checkIfSelected(DeltaZ.state())):
-        print("DeltaZ")
-        file_object.write("python ZscoreDeltaFreq.py &\n")
-
-    if (checkIfSelected(ThetaZ.state())):
-        print("ThetaZ")
-        file_object.write("python ZscoreThetaFreq.py &\n")
-
-    if (checkIfSelected(AlphaZ.state())):
-        print("AlphaZ")
-        file_object.write("python ZscoreAlphaFreq.py &\n")
-
-    if (checkIfSelected(RelativePow.state())):
-        print("RelativePow")
-        file_object.write("python RelativePower.py &\n")
-
-    if (checkIfSelected(RelativeZ.state())):
-        print("RelativeZ")
-        file_object.write("python RelativeZscore.py &\n")
+    if (checkIfSelected(video.state())):
+        print("video")
+        file_object.write("./videoBash.sh &\n")
 
     subprocess.call(['chmod', '754', 'runScripts.sh'])
     #
     file_object.close()
-    subprocess.call("./runScripts.sh",shell=True)
+    subprocess.call("runScripts.sh",shell=True)
 
 b = Button(top, text="RUN", command=callback, height=2, width=5)
 b.grid(row=40, column=5)
