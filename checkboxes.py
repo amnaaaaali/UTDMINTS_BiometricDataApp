@@ -33,7 +33,7 @@ def callback():
          os.remove("runScripts.sh")
     file_object = open('runScripts.sh', 'w+')
     file_object.write("#/bin/bash\n")
-    file_object.write("python SendData3.py &\n")
+    file_object.write("sh runSendData.sh &\n")
     # print (file_object)
     if (checkIfSelected(MultiFreq.state())):
         print("MultiFreq")
@@ -45,12 +45,12 @@ def callback():
 
     if (checkIfSelected(video.state())):
         print("video")
-        file_object.write("./videoBash.sh &\n")
+        file_object.write("sh videoBash.sh &\n")
 
-    subprocess.call(['chmod', '754', 'runScripts.sh'])
+    # subprocess.call(['chmod', '754', 'runScripts.sh'])
     #
     file_object.close()
-    subprocess.call("runScripts.sh",shell=True)
+    subprocess.call("sh runScripts.sh",shell=True)
 
 b = Button(top, text="RUN", command=callback, height=2, width=5)
 b.grid(row=40, column=5)
