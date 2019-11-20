@@ -52,7 +52,7 @@ n = 64
 # x, y = np.meshgrid(np.arange(0, 8), np.arange(0, 8))
 # x = x.reshape(n)
 # y = y.reshape(n)
-x, y = EEGArray()
+x, y, _ = EEGArray()
 
 # initialize newdata
 newdata = np.zeros(n)
