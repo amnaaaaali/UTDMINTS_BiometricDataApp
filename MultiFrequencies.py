@@ -26,7 +26,7 @@ matplotlib.rcParams['toolbar'] = 'None'
 # create figure. figsize sets the default size of the
 fig = plt.figure(figsize=(10, 4))
 # remove extra spacing around figure
-fig.set_tight_layout(True)
+# fig.set_tight_layout(True)
 # ax1 is delta freq, ax2 = theta freq, ax3 = alpha freq
 ax1 = fig.add_subplot(1, 3, 1)
 ax1.set_xticks([])
@@ -60,7 +60,7 @@ newdata = np.zeros(n)
 # initialize scatter plot
 scat1 = ax1.scatter(x, y, s=100, c=newdata, vmin=0,
                     vmax=1, cmap=cm.get_cmap("jet"))
-cbar = fig.colorbar(scat1, ax=ax3, ticks=[0, 0.5, 1])
+cbar = fig.colorbar(scat1, ax=[ax1, ax2, ax3], ticks=[0, 0.5, 1])
 cbar.ax.set_yticklabels(['0', '0.5', '1'])
 
 # for j, lab in enumerate(['$0$','$1$','$2$','$3$']):

@@ -20,7 +20,6 @@ import socketserver
 # first resolve an EEG stream on the lab network
 print("looking for an EEG stream...")
 streams = resolve_stream('type', 'EEG')
-
 # create figure. figsize sets the default size of the
 fig = plt.figure(figsize=(13, 4))
 # ax1 is delta freq, ax2 = theta freq, ax3 = alpha freq
@@ -46,7 +45,7 @@ n = 64
 # x, y = np.meshgrid(np.arange(0, 8), np.arange(0, 8))
 # x = x.reshape(n)
 # y = y.reshape(n)
-x, y = EEGArray()
+x, y, _ = EEGArray()
 
 # initialize newdata
 newdata = np.zeros(n)
@@ -54,7 +53,7 @@ newdata = np.zeros(n)
 # initialize scatter plot
 scat1 = ax1.scatter(x, y, s=100, c=newdata, vmin=0,
                     vmax=1, cmap=plt.cm.seismic_r)
-cbar = fig.colorbar(scat1, ax=[ax1, ax2, ax3], ticks=[0, 0.5, 1])
+cbar = fig.colorbar(scat1, ax=[ax1], ticks=[0, 0.5, 1])
 cbar.ax.set_yticklabels(['-1', '0', '1'])
 
 # for j, lab in enumerate(['$0$','$1$','$2$','$3$']):

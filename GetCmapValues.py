@@ -72,7 +72,7 @@ def getCmapForZscores(data, newdata, freqValue):
     # compute power spectrum of data
     f, ps = sps.welch(data, fs=26)
     print("ps", ps)
-    print(len(f))
+
     extractAmplitude = []
     # delta freq band
     if(freqValue == -1):
@@ -103,4 +103,3 @@ def getCmapForZscores(data, newdata, freqValue):
     # 0 and 1
     zscoreArray = ((zscoreArray / np.amax(zscoreArray)) / 2) + 0.5
     return [zscoreArray, data]
-    print("zscore", zscoreArray)
