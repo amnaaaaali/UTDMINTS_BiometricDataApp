@@ -9,7 +9,6 @@ from scipy import stats
 # takes in the data from EEG, and calls the fourier transform
 # and processes it so it can be passed into the plot/cmap
 
-
 def getCmapByFreqVal(data, newdata, freqValue, globalMax):
     # delete first row
     data = np.delete(data, 0, 0)

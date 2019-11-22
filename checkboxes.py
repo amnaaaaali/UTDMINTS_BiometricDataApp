@@ -54,7 +54,6 @@ def callback():
     if (checkIfSelected(MultiZscore.state())):
         print("MultiZscore")
         file_object.write("python MultiZscore.py &\n")
-        print("Mai hi land hun")
 
     file_object.close()
     subprocess.call("sh runScripts.sh", shell=True)

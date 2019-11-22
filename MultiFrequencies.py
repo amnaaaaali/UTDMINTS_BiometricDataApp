@@ -24,7 +24,7 @@ matplotlib.use("TkAgg")
 # removes toolbar at the bottom of plot
 matplotlib.rcParams['toolbar'] = 'None'
 # create figure. figsize sets the default size of the
-fig = plt.figure(figsize=(10, 4))
+fig = plt.figure(figsize=(13, 4))
 # remove extra spacing around figure
 # fig.set_tight_layout(True)
 # ax1 is delta freq, ax2 = theta freq, ax3 = alpha freq

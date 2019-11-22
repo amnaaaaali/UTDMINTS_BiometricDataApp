@@ -53,7 +53,7 @@ newdata = np.zeros(n)
 # initialize scatter plot
 scat1 = ax1.scatter(x, y, s=100, c=newdata, vmin=0,
                     vmax=1, cmap=plt.cm.seismic_r)
-cbar = fig.colorbar(scat1, ax=[ax1], ticks=[0, 0.5, 1])
+cbar = fig.colorbar(scat1, ax=[ax1, ax2, ax3], ticks=[0, 0.5, 1])
 cbar.ax.set_yticklabels(['-1', '0', '1'])
 
 # for j, lab in enumerate(['$0$','$1$','$2$','$3$']):
