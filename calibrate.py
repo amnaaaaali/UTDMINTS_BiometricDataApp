@@ -1,5 +1,5 @@
 """ 
-    Modification of calibrate_and_record.py provided by Tobii.
+    Modified calibrate_and_record.py example provided by Tobii.
     Creates project, participant, and calibration IDs and attempts to calibrate gaze.
     
     In order to make the calibration pass the keeep-alive message needs to be sent.
@@ -24,10 +24,8 @@ def mkgsock(glasses_ip):
     """ Create a upd Gsocket pair for a peer description """
     ipfam = Gio.SocketFamily.IPV4
     gaddr = Gio.InetAddress.new_from_string(glasses_ip)
-
     if gaddr.get_family == Gio.SocketFamily.IPV6:
         ipfam = Gio.SocketFamily.IPV6
-
     return Gio.Socket.new(ipfam, Gio.SocketType.DATAGRAM,
                           Gio.SocketProtocol.UDP)
 
@@ -54,13 +52,13 @@ class KeepAlive:
         GLib.source_remove(self._sig)
 
 
-# send data to URL
+# Send data to URL
 def post_request(base_url, api_action, data=None):
     url = base_url + api_action
     req = urllib.request.Request(url)
-    req.add_header('Content-Type', 'application/json')  # key, value
+    req.add_header('Content-Type', 'application/json')
     data = json.dumps(data)
-    response = urllib.request.urlopen(req, data.encode())  #data must be object
+    response = urllib.request.urlopen(req, data.encode())
     data = response.read()
     json_data = json.loads(data)
     return json_data
@@ -80,14 +78,13 @@ def wait_for_status(base_url, api_action, key, values):
         if json_data[key] in values:
             running = False
         time.sleep(1)
-
     return json_data[key]
 
 
 def create_project(base_url):
-    print("Creating project...")  #tester
+    print("Creating project...")
     json_data = post_request(base_url, '/api/projects')
-    print("Project created.")  #tester
+    print("Project created.")
     return json_data['pr_id']
 
 
@@ -116,14 +113,14 @@ def start_calibration(calibration_id, base_url):
 
 
 def stop_calibration(gsocket, keepalive):
-    """ stop keep alive message and close gsock"""
+    """ Stop keep alive message and close gsocket"""
     keepalive.stop()
     gsocket.close()
 
 
 def calibrate(glasses_ip, port):
     """ Creates project, participant, and calibration IDs and attempts to calibrate gaze.
-        Returns the participant ID for recording."""
+    "   Returns the participant ID for recording."""
 
     # Create socket which will send a keep alive message for the live data stream
     data_gsocket = mkgsock(glasses_ip)
@@ -143,13 +140,6 @@ def calibrate(glasses_ip, port):
     status = wait_for_status(base_url,
                              '/api/calibrations/' + calibration_id + '/status',
                              'ca_state', ['failed', 'calibrated'])
-
-    if status == 'failed':
-        print(
-            'Calibration failed, using default calibration instead. Type c to try again.'
-        )
-    else:
-        print('Calibration successful.')
     # Clean up: Close gsocket and stop keep alive messages
     stop_calibration(data_gsocket, keepalive)
-    return participant_id
+    return participant_id, status
