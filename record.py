@@ -5,6 +5,7 @@
 
     This module is tested with Python 3.7 on Windows 10 and MSYS2 64-bit
     Uses gsocket and not python sockets.
+    For ethernet connection only.
 """
 
 import urllib.request  #updated version
@@ -16,15 +17,13 @@ from gi.repository import Gio, GLib
 
 # Keep-alive message content used to request live video streams
 KA_VIDEO_MSG = {"type": "live.video.unicast", "key": "some_UID", "op": "start"}
-
+PORT = ':80' # Port number required to access REST API using IPV6 address for ethernet connection
 
 # Create UDP gsocket
 def mkgsock(peer):
     """ Create a upd Gsocket pair for a peer description """
     ipfam = Gio.SocketFamily.IPV4
-    gaddr = Gio.InetAddress.new_from_string(peer[0])
-
-    if gaddr.get_family == Gio.SocketFamily.IPV6:
+    if ':' in peer[0]:
         ipfam = Gio.SocketFamily.IPV6
     #new(family,type, protocol)
     return Gio.Socket.new(ipfam, Gio.SocketType.DATAGRAM,
@@ -74,10 +73,8 @@ def wait_for_status(base_url, api_action, key, values):
     url = base_url + api_action
     running = True
     while running:
-        #req = urllib2.Request(url)
         req = urllib.request.Request(url)
         req.add_header('Content-Type', 'application/json')
-        #response = urllib2.urlopen(req, None)
         response = urllib.request.urlopen(req, None)
         data = response.read()
         json_data = json.loads(data)
@@ -95,7 +92,7 @@ def create_recording(base_url, participant_id):
 
 
 def start_recording(glasses_ip, participant_id):
-    base_url = 'http://' + str(glasses_ip)
+    base_url = 'http://' + str(glasses_ip) + PORT
     recording_id = create_recording(base_url, participant_id)
     print('Recording started...')
     post_request(base_url, '/api/recordings/' + recording_id + '/start')
@@ -104,7 +101,7 @@ def start_recording(glasses_ip, participant_id):
 
 def stop_recording(glasses_ip, recording_id):
     print('Stopping recording...')
-    base_url = 'http://' + str(glasses_ip)
+    base_url = 'http://' + str(glasses_ip) + PORT
     post_request(base_url, '/api/recordings/' + recording_id + '/stop')
     status = wait_for_status(base_url,
                              '/api/recordings/' + recording_id + '/status',
