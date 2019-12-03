@@ -10,8 +10,7 @@
 
 ### MSYS2 Installation & Setup
 * [MSYS2](https://www.msys2.org/) - The software distro and building platform used
-Since PyGObject is required, follow these instructions:
-* [Windows Installation for PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-getting-started)
+* [Windows Installation for PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-getting-started) - PyGObject is a Python package which provides bindings for GObject based libraries such as GTK, GStreamer, WebKitGTK, GLib, GIO and many more.
 
 After setting up MSYS2 additional packages will be required:
 * gstreamer 1.16.0-2
@@ -28,7 +27,7 @@ After setting up MSYS2 additional packages will be required:
 * twolame 0.3.13-3
 
 Instructions for installing packages [here](https://github.com/msys2/msys2/wiki/MSYS2-installation).
-When installing packages, ensure it prefixed with 'mingw-w64-x86_64'. Version number not required.
+When installing packages, ensure the prefix is 'mingw-w64-x86_64'. Version number not required.
 
 ```
 $ pacman -S mingw-w64-x86_64-gstreamer
