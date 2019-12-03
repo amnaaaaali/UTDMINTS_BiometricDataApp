@@ -3,7 +3,7 @@
     for how to send and receive discovery info from glasses on network.
 
     This module is tested with Python 3.7 on Windows 10 and MSYS2 64 bit.
-    Connects only via wifi.
+    For ethernet connection only.
 
 '''
 import socket
@@ -11,7 +11,8 @@ import struct
 import json
 
 MULTICAST_ADDR = 'ff02::1'  # all ipv6 devices with link-local scope
-#ETH_IP = 'fe80::39ee:1ac:d51d:2e80'  #ipv6 of ethernet adapter or port
+#ETH_ADPT = 'fe80::39ee:1ac:d51d:2e80'  #ipv6 of ethernet adapter
+ETH_IF = 'fe80::f430:a788:aae4:132c%7' #ipv6 of ethernet interface
 PORT = 13007  # Port used by RU
 
 
@@ -24,8 +25,8 @@ def discover():
     # Avoid error 'Adress already in use'
     s6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # Associate the socket with a specific network interface & port number
-    #s6.bind((ETH_IP, PORT)) # for ethernet connection
-    s6.bind(('::', PORT))  # for wifi connection
+    s6.bind((ETH_IF, PORT)) # for ethernet connection
+    #s6.bind(('::', PORT))  # for wifi connection
     # send data/msg to socket
     s6.sendto('{"type":"discover"}'.encode(), (MULTICAST_ADDR, 13006))
 
@@ -34,9 +35,14 @@ def discover():
         data, address = s6.recvfrom(1024)
         # covert data to str
         print(" From: " + address[0] + " " + data.decode())
-        #turn JSON encoded data into Python obj
-        data = json.loads(data)
-        # get ip address from data, only wifi returns an ipv4 address
-        glasses_IP = data['ipv4']
         break
-    return glasses_IP
+    return address[0]
+        
+        #for wifi only
+        #turn JSON encoded data into Python obj
+        #data = json.loads(data)
+        # get ip address from data, only wifi returns an ipv4 address
+        #glasses_IP = data['ipv4']
+        #break
+    #return glasses_IP
+        

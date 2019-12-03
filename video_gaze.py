@@ -39,8 +39,7 @@ from gi.repository import Gst, Gio, GLib, GstVideo
 def mkgsock(peer):
     """ Create a upd Gsocket pair for a peer description """
     ipfam = Gio.SocketFamily.IPV4
-    gaddr = Gio.InetAddress.new_from_string(peer[0])
-    if gaddr.get_family == Gio.SocketFamily.IPV6:
+    if ':' in peer[0]:
         ipfam = Gio.SocketFamily.IPV6
     return Gio.Socket.new(ipfam, Gio.SocketType.DATAGRAM,
                           Gio.SocketProtocol.UDP)

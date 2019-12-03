@@ -6,6 +6,7 @@
 
     This module is tested with Python 3.7 on Windows 10 and MSYS2 64 bit.
     Uses gsocket and not python sockets.
+    For ethernet connection only.
 """
 
 import urllib.request  #updated version
@@ -17,14 +18,14 @@ from gi.repository import Gio, GLib
 
 # Keep-alive message content used to request live data
 KA_DATA_MSG = {"type": "live.data.unicast", "key": "some_GUID", "op": "start"}
+PORT = ':80' # Port number required to access REST API using IPV6 address for ethernet connection
 
 
 # Creates UDP gsocket
 def mkgsock(glasses_ip):
     """ Create a upd Gsocket pair for a peer description """
     ipfam = Gio.SocketFamily.IPV4
-    gaddr = Gio.InetAddress.new_from_string(glasses_ip)
-    if gaddr.get_family == Gio.SocketFamily.IPV6:
+    if ':' in glasses_ip:
         ipfam = Gio.SocketFamily.IPV6
     return Gio.Socket.new(ipfam, Gio.SocketType.DATAGRAM,
                           Gio.SocketProtocol.UDP)
@@ -126,7 +127,7 @@ def calibrate(glasses_ip, port):
     data_gsocket = mkgsock(glasses_ip)
     peer = (glasses_ip, port)
     keepalive = KeepAlive(data_gsocket, peer, KA_DATA_MSG)
-    base_url = 'http://' + str(glasses_ip)
+    base_url = 'http://' + str(glasses_ip) + PORT
 
     project_id = create_project(base_url)
     participant_id = create_participant(base_url, project_id)
