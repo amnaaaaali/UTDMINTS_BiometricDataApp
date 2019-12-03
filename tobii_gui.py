@@ -212,6 +212,7 @@ class Tobii_GUI():
 
     def on_realize(self, widget):
         # Realizes window and retrieves its id for the videos's sink to render into
+        # Souce: Marwin Schmitt https://stackoverflow.com/a/27236258
         window = widget.get_window()
         if not window.ensure_native():
             print("Couldn't create native window need for GstVideoOverlay")
