@@ -58,7 +58,7 @@ Video overlay not opaque. Video is difficult to see if they're are other apps or
 
 ### Built With
 
-*[Gstreamer](https://gstreamer.freedesktop.org/documentation/?gi-language=c) - The multimedia framework used
+* [Gstreamer](https://gstreamer.freedesktop.org/documentation/?gi-language=c) - The multimedia framework used
 
 ### References
 
