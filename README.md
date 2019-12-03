@@ -53,7 +53,7 @@ $ python3 tobii_gui.py
 ```
 ### Issues
 
-Video overlay not opaque. Video is difficult to see if they're are other apps or windows behind the GUI window and if background is not solid black.
+Video overlay not opaque. Video is difficult to see if there are other apps or windows behind the GUI window and if the desktop background is not solid black.
 
 ### Built With
 
