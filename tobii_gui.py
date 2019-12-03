@@ -9,11 +9,11 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Gst
 
 X_POS = 1000
-Y_POS = 300
+Y_POS = 500
 BORDER_WIDTH = 6
 BOX_SPACING = 6
-MAX_HEIGHT = 456
-MAX_WIDTH = 684
+MAX_HEIGHT = 356
+MAX_WIDTH = 584
 
 PORT = 49152
 
@@ -42,7 +42,7 @@ class Tobii_GUI():
         main_window = Gtk.Window.new(Gtk.WindowType.TOPLEVEL)
         main_window.set_title("Tobii Video")
         main_window.set_border_width(BORDER_WIDTH)
-        main_window.set_resizable(False)
+        #main_window.set_resizable(False)
         main_window.set_default_size(MAX_WIDTH, MAX_HEIGHT)
         # Handles event when 'x' button clicked to close window
         main_window.connect("delete-event", self.on_delete_event)
