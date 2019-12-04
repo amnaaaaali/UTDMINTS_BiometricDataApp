@@ -31,15 +31,15 @@ fig = plt.figure(figsize=(13, 4))
 ax1 = fig.add_subplot(1, 3, 1)
 ax1.set_xticks([])
 ax1.set_yticks([])
-ax1.title.set_text("Delta Band")
+ax1.title.set_text("Delta Band\n(Frequency Range: 1-3 Hz)")
 ax2 = fig.add_subplot(1, 3, 2)
 ax2.set_xticks([])
 ax2.set_yticks([])
-ax2.title.set_text("Theta Band")
+ax2.title.set_text("Theta Band\n(Frequency Range: 4-8 Hz)")
 ax3 = fig.add_subplot(1, 3, 3)
 ax3.set_xticks([])
 ax3.set_yticks([])
-ax3.title.set_text("Alpha Band")
+ax3.title.set_text("Alpha Band\n(Frequency Range: 8-12 Hz)")
 
 # set colormap
 # cmap = plt.cm.jet
