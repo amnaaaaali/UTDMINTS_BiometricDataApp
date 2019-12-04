@@ -32,20 +32,15 @@ TEAM TOBII NOTES:
 import json
 import gi
 gi.require_version('Gst', '1.0')
-from gi.repository import Gst, Gio, GLib
-
-MAX_HEIGHT = 540  #Set hieight for video
-MAX_WIDTH = 960  #Set width for video
+gi.require_version('GstVideo', '1.0')
+from gi.repository import Gst, Gio, GLib, GstVideo
 
 
 def mkgsock(peer):
     """ Create a upd Gsocket pair for a peer description """
     ipfam = Gio.SocketFamily.IPV4
-    gaddr = Gio.InetAddress.new_from_string(peer[0])
-    #InetSocketAddress obj is not subscriptable
-    if gaddr.get_family == Gio.SocketFamily.IPV6:
+    if ':' in peer[0]:
         ipfam = Gio.SocketFamily.IPV6
-    #new(family,type, protocol)
     return Gio.Socket.new(ipfam, Gio.SocketType.DATAGRAM,
                           Gio.SocketProtocol.UDP)
 
@@ -120,7 +115,6 @@ class BufferSync():
         " the frame timestamp
         """
         # Split the gaze syncs to ones before pts and keep the ones after pts
-        #syncspast = filter(lambda x: x['pts'] <= pts, self._et_syncs)
         syncspast = list(filter(lambda x: x['pts'] <= pts, self._et_syncs))
         self._et_syncs = list(filter(lambda x: x['pts'] > pts, self._et_syncs))
         if syncspast != []:
@@ -172,9 +166,8 @@ class EyeTracking():
 
     def _data(self, ioc, cond):
         """ Read next line of data """
-        #get str_return from read_line
+        #get str_return from read_line tuple
         line = ioc.read_line()[1]
-        #print(line) #test
         self._buffersync.add_et(json.loads(line))
         return True
 
@@ -194,11 +187,9 @@ class Video():
         "queue",  # build queue for the decoder 
         "h264parse",
         "avdec_h264 max-threads=0",  # decode the incoming stream to frames
-        "videoscale",
-        "video/x-raw,width=" + str(MAX_WIDTH) + ",height=" + str(MAX_HEIGHT),
         "identity name=decoded",  # used to grab video frame to be displayed
         "textoverlay name=textovl text=* halignment=position valignment=position xpad=0  ypad=0",  # simple text overlay
-        "d3dvideosink force-aspect-ratio=True name=video"  # Output on video
+        "d3dvideosink force-aspect-ratio=True name=video"
     ]
     _pipeline = None  # The GStreamer pipeline
     _textovl = None  # Text overlay element
@@ -217,15 +208,17 @@ class Video():
             self._textovl.set_property("xpos", obj['gp'][0])
             self._textovl.set_property("ypos", obj['gp'][1])
 
-    def start(self, peer, buffersync):
+    def start(self, peer, buffersync, video_window_handle):
         """ Start grabbing video """
         # Create socket and set syncbuffer
         self._gsock = mkgsock(peer)
         self._buffersync = buffersync
 
         # Create pipeline
-        #self._pipeline = gst.parse_launch(" ! ".join(self._PIPEDEF))
         self._pipeline = Gst.parse_launch(" ! ".join(self._PIPEDEF))
+
+        sink = self._pipeline.get_by_name("video")
+        GstVideo.VideoOverlay.set_window_handle(sink, video_window_handle)
 
         # Add watch to pipeline to get tsdemux messages
         bus = self._pipeline.get_bus()
@@ -259,8 +252,6 @@ class Video():
             # for the render pipeline. Will be picked up by the handoff
             if st.has_name("tsdemux") and st.has_field("pts"):
                 self._buffersync.add_pts_offset(st['offset'], st['pts'])
-        if msg.type == Gst.MessageType.EOS:
-            print("End of stream")
         #return True
 
     def _decoded_buffer(self, ident, buf):
