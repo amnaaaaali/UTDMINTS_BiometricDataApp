@@ -1,3 +1,18 @@
+""" Tobii GUI to interfrace with Tobii Pro Glasses 2
+    Discovers, displays video gaze, calibrates and records video.
+
+    Discovers glasses via ethernet only.
+
+    Test with Python 3.7 on Windows 10 with MSYS2 (64 bit).
+    Run from 'MSYS MINGW64' shell launcher (blue icon).
+
+    Current Issues:
+        - Video overlay causes video to not be opaque.
+          Any other windows or icons behind the GUI can be seen through video.
+          Also video is difficult to see if desktop background is not solid black.
+
+"""
+
 import discover
 import video_gaze as vg
 import calibrate as calibrate
@@ -8,23 +23,27 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Gst
 
+# Define where video will be positioned on desktop
 X_POS = 1000
 Y_POS = 500
-BORDER_WIDTH = 6
-BOX_SPACING = 6
+# Define default size of window when created. After creation, window is resizable
 MAX_HEIGHT = 356
 MAX_WIDTH = 584
-
+# Misc
+BORDER_WIDTH = 6
+BOX_SPACING = 6
+# Arbitrary port to for network connection
 PORT = 49152
 
 
-# Sub-class Gtk.Window to define our own classs
 class Tobii_GUI():
     def __init__(self):
         # Initilize GTK
         Gtk.init(None)
         #Initialize Gst
         Gst.init(None)
+
+        # Initialize required variables
         self.is_Calibrated = False
         self.is_Recording = False
         self.is_Discovered = False
@@ -38,11 +57,11 @@ class Tobii_GUI():
         self.build_ui()
 
     def build_ui(self):
+        """ Build the components within the GUI """
         # Set up main window to hold all components
         main_window = Gtk.Window.new(Gtk.WindowType.TOPLEVEL)
         main_window.set_title("Tobii Video")
         main_window.set_border_width(BORDER_WIDTH)
-        #main_window.set_resizable(False)
         main_window.set_default_size(MAX_WIDTH, MAX_HEIGHT)
         # Handles event when 'x' button clicked to close window
         main_window.connect("delete-event", self.on_delete_event)
@@ -102,8 +121,7 @@ class Tobii_GUI():
         Gtk.main_quit()
 
     def on_discover(self, widget):
-        # Discovers the glasses via ethernet.
-        # Glasses must be connected before discovering
+        """ Discover the glasses via ethernet. Glasses must be connected before discovering """
         if self.is_Discovered:
             print("Glasses already discovered. Not action required.")
         else:
@@ -127,9 +145,9 @@ class Tobii_GUI():
                                  self.video_window_handle)
 
     def on_calibrate(self, widget):
-        # Calibrates video gaze if its hasn't been done already.
-        # If calibration not successful, user can try again
-        # or use default calibration instead.
+        """ Calibrates video gaze if its hasn't been done already.
+            If calibration is not successful, user can try again or use default calibration instead.
+        """
         if self.is_Calibrated:
             # Create information dialog box
             dialog = Gtk.MessageDialog(
@@ -173,7 +191,9 @@ class Tobii_GUI():
                 dialog.destory()
 
     def on_start_record(self, widget):
-        # Starts recording video, requires calibration first.
+        """ Starts recording vidoe, requires calibration first.
+            Returns recordind id required to stop recording.
+        """
         if not self.is_Calibrated:
             # Create information dialog box
             dialog = Gtk.MessageDialog(
@@ -194,11 +214,28 @@ class Tobii_GUI():
             print("Recording already in progress")
 
     def on_stop_record(self, widget):
-        # Stops recording video if one is in progress
+        """ Stops the recording the video in progress and returns the status of that recording """
         if self.is_Recording:
             print("Recording stopping")
+            status = record.stop_recording(self.glasses_ip, self.recording_id)
             self.is_Recording = False
             self.is_Calibrated = False
+            if status == 'failed':
+                dialog = Gtk.MessageDialog(parent=None,
+                                           flags=0,
+                                           message_type=Gtk.MessageType.INFO,
+                                           buttons=Gtk.ButtonsType.OK,
+                                           text="Recording Failed")
+                dialog.run()
+                dialog.destory()
+            else:
+                dialog = Gtk.MessageDialog(parent=None,
+                                           flags=0,
+                                           message_type=Gtk.MessageType.INFO,
+                                           buttons=Gtk.ButtonsType.OK,
+                                           text="Recording Successful")
+                dialog.run()
+                dialog.destory()
         else:
             # Create information dialog box
             dialog = Gtk.MessageDialog(parent=None,
@@ -211,11 +248,12 @@ class Tobii_GUI():
             dialog.destroy()
 
     def on_realize(self, widget):
-        # Realizes window and retrieves its id for the videos's sink to render into
+        """ Realizes the video window and retrieves its id for the video to render into
         # Souce: Marwin Schmitt https://stackoverflow.com/a/27236258
+        """
         window = widget.get_window()
         if not window.ensure_native():
-            print("Couldn't create native window need for GstVideoOverlay")
+            print("Couldn't create native window needed for GstVideoOverlay")
         ctypes.pythonapi.PyCapsule_GetPointer.restype = ctypes.c_void_p
         ctypes.pythonapi.PyCapsule_GetPointer.argtypes = [ctypes.py_object]
         drawingArea_gpointer = ctypes.pythonapi.PyCapsule_GetPointer(
