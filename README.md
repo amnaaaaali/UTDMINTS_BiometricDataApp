@@ -9,10 +9,10 @@
 * MSYS2 MINGW64 - The shell launcher to use
 
 ### MSYS2 Installation & Setup
-* [MSYS2](https://www.msys2.org/) - The software distro and building platform used
-* [Windows Installation for PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-getting-started) - PyGObject is a Python package which provides bindings for GObject based libraries such as GTK, GStreamer, WebKitGTK, GLib, GIO and many more.
 
-After setting up MSYS2 additional packages will be required:
+* [MSYS2](https://www.msys2.org/) - The software distro and building platform used
+
+After downloading and installing MSYS2 for 64 bit additional packages will be required:
 * gstreamer 1.16.0-2
 * gst-libav 1.16.0-3
 * gst-plugins-bad 1.16.0-3
@@ -26,31 +26,43 @@ After setting up MSYS2 additional packages will be required:
 * opencv 4.1.0-3
 * twolame 0.3.13-3
 
-Instructions for installing packages [here](https://github.com/msys2/msys2/wiki/MSYS2-installation).
-When installing packages, ensure the prefix is 'mingw-w64-x86_64'. Version number not required.
-
+Launch the MSYS MINGW64 shell launcher (blue icon). To search for a package:
 ```
-$ pacman -S mingw-w64-x86_64-gstreamer
-warning: mingw-w64-x86_64-gstreamer-1.16.0-2 is up to date -- reinstalling
-resolving dependencies...
-looking for conflicting packages...
-
-Packages (1) mingw-w64-x86_64-gstreamer-1.16.0-2
-
-Total Installed Size:  10.90 MiB
-Net Upgrade Size:       0.00 MiB
-
-:: Proceed with installation? [Y/n]
-
+pacman -Ss pygobject-devel
 ```
+Similiar to the following will be returned:
+```
+mingw32/mingw-w64-i686-pygobject-devel 3.32.2-1
+    Development files for the pygobject bindings
+mingw64/mingw-w64-x86_64-pygobject-devel 3.32.2-1
+    Development files for the pygobject bindings
+```
+To install the package:
+```
+pacman -S mingw-w64-x86_64-pygobject-devel
+```
+As of Oct 2019, some of these packages have been updated and have not been tested with our project.
+If the packages mentioned above are not currently available, they can be downloaded from the [x86_64 Package Repo](http://repo.msys2.org/mingw/x86_64/)
+
+Download and copy the package the into your ../msys64/home/user/ directory
+Install the downloaded package with:
+```
+pacman -U <packagename>
+```
+For example:
+```
+pacman -U mingw-w64-x86_64-opencv-4.1.0-3-any.pkg.tar.xz
+```
+Additional Instructions for packages [here](https://github.com/msys2/msys2/wiki/Using-packages).
 
 ### Execution
 
-Simply type the following in the MSYS2 MINGW64 launcher to run the GUI independently
+Simply type the following in the MSYS2 MINGW64 shell launcher to run the GUI independently
 
 ```
 $ python3 tobii_gui.py
 ```
+
 ### Issues
 
 Video overlay not opaque. Video is difficult to see if there are other apps or windows behind the GUI window and if the desktop background is not solid black.
@@ -58,11 +70,13 @@ Video overlay not opaque. Video is difficult to see if there are other apps or w
 ### Built With
 
 * [Gstreamer](https://gstreamer.freedesktop.org/documentation/?gi-language=c) - The multimedia framework used
+* [PyGobject](https://pygobject.readthedocs.io/en/latest/index.html) - PyGObject is a Python package which provides bindings for GObject based libraries such as GTK, GStreamer, WebKitGTK, GLib, GIO and many more.
 
 ### References
 
 * [PyGObject API Reference](https://lazka.github.io/pgi-docs/index.html)
-* [x86_64 Package Repo](http://repo.msys2.org/mingw/x86_64/)
+* [MSYS2 Install Guide](https://github.com/msys2/msys2/wiki/MSYS2-installation)
+* [MSYS Packages](https://packages.msys2.org/updates)
 
 
 ## EEG Plots
