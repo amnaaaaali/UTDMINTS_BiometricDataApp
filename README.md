@@ -62,6 +62,11 @@ Simply type the following in the MSYS2 MINGW64 shell launcher to run the GUI ind
 ```
 $ python3 tobii_gui.py
 ```
+Module dependencies:
+* discover.py
+* video_gaze.py
+* calibrate.py
+* record.py
 
 ### Issues
 
