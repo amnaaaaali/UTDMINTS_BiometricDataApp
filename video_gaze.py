@@ -20,13 +20,14 @@
 " 
 
 TEAM TOBII NOTES:
-    - tested with Python 3.7, Gstreamer 1.0 on Windows 10 with MSYS2
-    - to avoid socket type confusion, only gsockets are used and not python sockets
-    - CAUTION: following error(bug?) raised now and then but still runs: 
+    - Used as a module with Tobii GUI.
+    - Tested with Python 3.7 on Windows 10 and MSYS2 64-bit
+    - Uses gsocket and not python sockets.
+    - For ethernet connection only.
+    CAUTION: the following error/bug raised now and then but still runs: 
         OverflowError: Python int too large to convert to C long
         The above exception was the direct cause of the following exception:
         SystemError: PyEval_EvalFrameEx returned a result with an error set
-
 """
 
 import json
@@ -37,7 +38,7 @@ from gi.repository import Gst, Gio, GLib, GstVideo
 
 
 def mkgsock(peer):
-    """ Create a upd Gsocket pair for a peer description """
+    """ Create a udp Gsocket pair for a peer description """
     ipfam = Gio.SocketFamily.IPV4
     if ':' in peer[0]:
         ipfam = Gio.SocketFamily.IPV6
@@ -57,7 +58,6 @@ class KeepAlive:
         })
         gaddr = Gio.InetSocketAddress.new_from_string(str(peer[0]),
                                                       int(peer[1]))
-        #print("Sending keep alive msgs ...") #testing
         gsock.send_to(gaddr, jsonobj.encode(), None)
         self._sig = GLib.timeout_add_seconds(timeout, self._timeout, gsock,
                                              peer, jsonobj)
@@ -153,7 +153,7 @@ class BufferSync():
 
 
 class EyeTracking():
-    """ Read eyetracking data from RU (recording unit)"""
+    """ Read eyetracking data from the RU (recording unit)"""
     _ioc_sig = 0  #IO channel
     _buffersync = None
 
@@ -166,7 +166,7 @@ class EyeTracking():
 
     def _data(self, ioc, cond):
         """ Read next line of data """
-        #get str_return from read_line tuple
+        #get 'str_return' from read_line tuple
         line = ioc.read_line()[1]
         self._buffersync.add_et(json.loads(line))
         return True
@@ -179,17 +179,17 @@ class EyeTracking():
 
 
 class Video():
-    """ Video stream from RU (recording unit)"""
+    """ Video stream from the RU (recording unit)"""
     _PIPEDEF = [
         "udpsrc name=src",  # UDP video data
         "tsparse",  # parse the incoming stream to MPegTS
         "tsdemux emit-stats=True",  # get pts statistics from the MPegTS stream
         "queue",  # build queue for the decoder 
-        "h264parse",
+        "h264parse",  # parse the stream - needs testing, may or may not need
         "avdec_h264 max-threads=0",  # decode the incoming stream to frames
         "identity name=decoded",  # used to grab video frame to be displayed
         "textoverlay name=textovl text=* halignment=position valignment=position xpad=0  ypad=0",  # simple text overlay
-        "d3dvideosink force-aspect-ratio=True name=video"
+        "d3dvideosink force-aspect-ratio=True name=video"  # Output video   
     ]
     _pipeline = None  # The GStreamer pipeline
     _textovl = None  # Text overlay element
@@ -217,6 +217,7 @@ class Video():
         # Create pipeline
         self._pipeline = Gst.parse_launch(" ! ".join(self._PIPEDEF))
 
+        # Set the sink to display in the GUI window with the specified handle
         sink = self._pipeline.get_by_name("video")
         GstVideo.VideoOverlay.set_window_handle(sink, video_window_handle)
 

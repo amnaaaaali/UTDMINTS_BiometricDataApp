@@ -1,9 +1,10 @@
 """ 
-    Modification of calibrate_and_record.py provided by Tobii.
-    Creates a recording.
-    Recording required participant id created during calibration.
+    Modified calibrate_and_record.py example provided by Tobii.
+    Module handles recording.
 
-    This module is tested with Python 3.7 on Windows 10 and MSYS2 64-bit
+    Recording requires participant id created during calibration.
+
+    Tested with Python 3.7 on Windows 10 and MSYS2 64-bit
     Uses gsocket and not python sockets.
     For ethernet connection only.
 """
@@ -17,7 +18,8 @@ from gi.repository import Gio, GLib
 
 # Keep-alive message content used to request live video streams
 KA_VIDEO_MSG = {"type": "live.video.unicast", "key": "some_UID", "op": "start"}
-PORT = ':80' # Port number required to access REST API using IPV6 address for ethernet connection
+PORT = ':80'  # Port number required to access REST API using IPV6 address for ethernet connection
+
 
 # Create UDP gsocket
 def mkgsock(peer):
@@ -25,7 +27,6 @@ def mkgsock(peer):
     ipfam = Gio.SocketFamily.IPV4
     if ':' in peer[0]:
         ipfam = Gio.SocketFamily.IPV6
-    #new(family,type, protocol)
     return Gio.Socket.new(ipfam, Gio.SocketType.DATAGRAM,
                           Gio.SocketProtocol.UDP)
 
@@ -35,13 +36,17 @@ class KeepAlive:
     _sig = 0
 
     def __init__(self, gsock, peer, keep_alive_msg, timeout=1):
+        # Convert keep alive message to JSON
         jsonobj = json.dumps(keep_alive_msg)
         gaddr = Gio.InetSocketAddress.new_from_string(str(peer[0]),
                                                       int(peer[1]))
+        # Send keep alive message to glasses. JSON is converted to bytes
         gsock.send_to(gaddr, jsonobj.encode(), None)
+        # Set timeout function to be called every second
         self._sig = GLib.timeout_add_seconds(timeout, self._timeout, gsock,
                                              peer, jsonobj)
 
+    # Resends keep alive message
     def _timeout(self, gsock, peer, jsonobj):
         gaddr = Gio.InetSocketAddress.new_from_string(str(peer[0]),
                                                       int(peer[1]))
@@ -52,18 +57,14 @@ class KeepAlive:
         GLib.source_remove(self._sig)
 
 
-def send_keepalive_msg(gsocket, msg, peer):
-    gaddr = Gio.InetSocketAddress.new_from_string(str(peer[0]), int(peer[1]))
-    gsocket.send_to(gaddr, msg.encode(), None)
-
-
-# send data to URL
 def post_request(base_url, api_action, data=None):
+    """ Sends data to URL """
     url = base_url + api_action
     req = urllib.request.Request(url)
-    req.add_header('Content-Type', 'application/json')  # key, value
+    # Header is key:value pair
+    req.add_header('Content-Type', 'application/json')
     data = json.dumps(data)
-    response = urllib.request.urlopen(req, data.encode())  #data must be object
+    response = urllib.request.urlopen(req, data.encode())
     data = response.read()
     json_data = json.loads(data)
     return json_data
@@ -81,17 +82,18 @@ def wait_for_status(base_url, api_action, key, values):
         if json_data[key] in values:
             running = False
         time.sleep(1)
-
     return json_data[key]
 
 
 def create_recording(base_url, participant_id):
+    """ Creates recording and returns recordin id """
     data = {'rec_participant': participant_id}
     json_data = post_request(base_url, '/api/recordings', data)
     return json_data['rec_id']
 
 
 def start_recording(glasses_ip, participant_id):
+    """ Starts recording using REST API. Return recording ID needed to stop recording """
     base_url = 'http://' + str(glasses_ip) + PORT
     recording_id = create_recording(base_url, participant_id)
     print('Recording started...')
@@ -100,13 +102,12 @@ def start_recording(glasses_ip, participant_id):
 
 
 def stop_recording(glasses_ip, recording_id):
+    """ Stops the recording with the given recording id.
+        Returns the stauts of the recording. """
     print('Stopping recording...')
     base_url = 'http://' + str(glasses_ip) + PORT
     post_request(base_url, '/api/recordings/' + recording_id + '/stop')
     status = wait_for_status(base_url,
                              '/api/recordings/' + recording_id + '/status',
                              'rec_state', ['failed', 'done'])
-    if status == 'failed':
-        print('Recording failed')
-    else:
-        print('Recording successful')
+    return status
