@@ -7,6 +7,7 @@
 * Windows 10
 * Python 3.7
 * MSYS2 MINGW64 - The shell launcher to use
+* Access to Tobii Pro Glasses 2
 
 ### MSYS2 Installation & Setup
 
@@ -82,6 +83,7 @@ Video overlay not opaque. Video is difficult to see if there are other apps or w
 * [PyGObject API Reference](https://lazka.github.io/pgi-docs/index.html)
 * [MSYS2 Install Guide](https://github.com/msys2/msys2/wiki/MSYS2-installation)
 * [MSYS Packages](https://packages.msys2.org/updates)
+* [Tobii Pro SDK Documentation](http://developer.tobiipro.com/)
 
 
 ## EEG Plots
