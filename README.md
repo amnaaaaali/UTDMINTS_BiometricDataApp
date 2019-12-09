@@ -87,6 +87,7 @@ Video overlay not opaque. Video is difficult to see if there are other apps or w
 
 
 ## EEG Plots
+
 #### AlphaFrequencies.py, DeltaFrequencies.py, ThetaFrequencies.py
 Each file shows each of the different Alpha, Delta, and Theta bands' EEG plots in
 seperate plots
@@ -99,12 +100,19 @@ in this file.
 
 #### MultiZscore.py
 All 3 frequency bands are shown with their Zscores plotted instead of the powers as with
-the other Files
+the other files.
+
+#### Z_Scores_ByFreq.py
+This file shows each of the different Alpha, Delta, and Theta bands' EEG plots in
+seperate plots. Z-Score Calculation: Calculate the Differences in : A red line is plotted Z-Score > 2.3. A blue line is plotted Z-Score < -2.3. Deviant Z-Scores.
+
+How to Run The Code:
+Run SendData3.py and then run Z_Scores_ByFreq.py visualization simultaneously. SendData3.py has code that has been previously recorded via a Python Lab Streaming Layer (PyLSL) outlet.
 
 
 #### GetCmapValues.py
 getCmapByFreqVal: For a given frequency value, the function calls the fourier transform on the current
 sample of data and computes the cmap value for that sample of data based on the power value??
 getCmapForZscores: Exactly the same as getCmapByFreqVal but computes the zscore value and uses
-that in the cmap
+that in the cmap.
 
