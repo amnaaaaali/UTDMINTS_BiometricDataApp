@@ -112,7 +112,7 @@ Run SendData3.py and then run Z_Scores_ByFreq.py visualization simultaneously. S
 
 #### GetCmapValues.py
 getCmapByFreqVal: For a given frequency value, the function calls the fourier transform on the current
-sample of data and computes the cmap value for that sample of data based on the power value??
+sample of data and computes the cmap value for that sample of data based on the power value.
 getCmapForZscores: Exactly the same as getCmapByFreqVal but computes the zscore value and uses
 that in the cmap.
 
