@@ -103,8 +103,8 @@ All 3 frequency bands are shown with their Zscores plotted instead of the powers
 the other files.
 
 #### Z_Scores_ByFreq.py
-This file shows each of the different Alpha, Delta, and Theta bands' EEG plots in
-seperate plots. Z-Score Calculation: Calculate the Differences in : A red line is plotted Z-Score > 2.3. A blue line is plotted Z-Score < -2.3. Deviant Z-Scores.
+This file shows each of the different Alpha, Delta, and Theta bands' EEG plots in three separate plots
+in one window.
 
 How to Run The Code:
 Run SendData3.py and then run Z_Scores_ByFreq.py visualization simultaneously. SendData3.py has code that has been previously recorded via a Python Lab Streaming Layer (PyLSL) outlet.
