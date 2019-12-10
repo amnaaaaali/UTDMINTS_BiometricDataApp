@@ -4,15 +4,20 @@ from tkinter import ttk
 from functools import partial
 import subprocess
 
+#size of the dashboard pop up window - arbitrary numbers chosen
+
 WINDOW_SIZE = "800x400"
 
+#Tk is some Tkinter object. I found this syntax online. 
 top = Tk()
 top.title('UTD MINTS')
-
+#first button
 MultiFreq = ttk.Checkbutton(top, text="Multi Frequencies")
 MultiFreq.grid(column=0, row=0)
+#there are three states to a checkbutton in tkinter
 MultiFreq.state(['!alternate'])
 
+#column of the new buttons change by 4 as we move right
 MultiZscore = ttk.Checkbutton(top, text="Multi Zscores")
 MultiZscore.grid(column=4, row=0)
 MultiZscore.state(['!alternate'])
@@ -25,12 +30,18 @@ video = ttk.Checkbutton(top, text="Gaze Video Livestream")
 video.grid(column=12, row=0)
 video.state(['!alternate'])
 
-
+#this function checks if the button has been selected. Focus is a state when you click on something and it is highlighted. 
+#Do not change this function - it is crucial to determining whether a button has been selected
 def checkIfSelected(state):
     if(state == ('selected',) or state == ('focus', 'selected')):
         return True
     return False
 
+#main function that deals with everything that happens when a user hits 'run':
+#we check if the bash script 'runScripts' exists - if it does, we delete it first.
+#We create a new runScripts file each time and then write the shebang '#/bin/bash' to it to start the script. 
+#command 'sh fileName.sh' runs a bash script. '&' runs multiple scripts concurrently. '\n' makes the cursor go to the next line
+#command 'python fileName.py &\n' runs a python file concurrently with the next file and moves the cursor to the next line. 
 
 def callback():
     if os.path.exists("runScripts.sh"):
@@ -58,7 +69,7 @@ def callback():
     file_object.close()
     subprocess.call("sh runScripts.sh", shell=True)
 
-
+#creates the 'run' button 
 b = Button(top, text="RUN", command=callback, height=2, width=5)
 b.grid(row=40, column=5)
 
